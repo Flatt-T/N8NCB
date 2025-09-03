@@ -5,80 +5,87 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>conferenceBuddy · Home</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="description" content="Manage conferences, sessions, vendors, and reports via n8n Flow Endpoints." />
   <style>
-    :root { --bg:#0b0d12; --card:#121623; --muted:#8a93a6; --text:#e7ecf7; --primary:#7c5cff; --primary-600:#6847ff; --ring:#2a2f3d; --border:#1c2130; --shadow:0 8px 24px rgba(0,0,0,.35); --radius:16px; }
-    * { box-sizing: border-box }
-    html, body { height: 100% }
+    :root {
+      --bg: #0b0d12;
+      --panel: #121621;
+      --text: #e8eefc;
+      --muted: #9aa6bf;
+      --primary: #6aa1ff;
+      --primary-2: #3a7bff;
+      --border: #1f2a44;
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(8,12,20,.45);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
     body {
-      margin: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      background: radial-gradient(1200px 800px at 100% -20%, rgba(124,92,255,0.18), transparent),
-                  radial-gradient(1000px 600px at -10% 0%, rgba(76,201,240,0.12), transparent),
+      margin: 0; font: 16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background: radial-gradient(1200px 600px at 10% -10%, #19315644, transparent),
+                  radial-gradient(800px 500px at 90% -20%, #13203544, transparent),
                   var(--bg);
       color: var(--text);
     }
-    header { position: sticky; top: 0; backdrop-filter: saturate(1.2) blur(6px); background: linear-gradient(to bottom, rgba(11,13,18,.9), rgba(11,13,18,.6)); border-bottom: 1px solid var(--border); }
-    .nav { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px; max-width:1200px; margin:0 auto; }
-    .brand { display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.3px }
-    .logo { width:28px; height:28px; border-radius:8px; background: linear-gradient(135deg, var(--primary), #4cc9f0); box-shadow: var(--shadow) }
-    .btn { appearance:none; border:1px solid var(--ring); background:#0f1320; color:var(--text); padding:10px 14px; border-radius:12px; font-weight:600; cursor:pointer; transition:.2s }
-    .btn:hover { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(124,92,255,.12) }
-    .btn.primary { background: linear-gradient(180deg, var(--primary), var(--primary-600)); border:none }
-    main { max-width: 1200px; margin: 16px auto; padding: 0 16px; }
-    .hero { margin: 24px 0 16px; display:grid; gap:10px }
-    .hero h1 { margin:0; font-size: 28px }
-    .hero p { margin:0; color:var(--muted) }
-    .grid { display:grid; grid-template-columns: 1fr; gap:16px }
-    @media (min-width: 900px){ .grid { grid-template-columns: repeat(3, 1fr) } }
-    .card { background: linear-gradient(180deg, rgba(18,22,35,.98), rgba(18,22,35,.9)); border:1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding:16px; display:grid; gap:8px }
-    .card h3 { margin:0; font-size:18px }
-    .muted { color: var(--muted) }
-    .row { display:flex; gap:8px; align-items:center; flex-wrap:wrap }
-    .grow { flex:1 }
-    .pill { display:inline-flex; align-items:center; gap:8px; padding:8px 10px; border:1px dashed var(--ring); border-radius:12px; color:var(--muted) }
-    .disabled { opacity:.6; pointer-events:none }
-    footer { color:var(--muted); font-size:12px; padding:24px 16px; text-align:center }/* Debug Drawer */
-.debug-toggle { position: fixed; right: 16px; bottom: 16px; z-index: 85 }
-.debug-drawer { position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 90; display: none; }
-.debug-drawer[open] { display: block }
-.debug-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); padding: 10px }
-.debug-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px }
-.debug-actions { display: flex; gap: 8px; flex-wrap: wrap }
-.debug-body { background: #0b0f1a; border: 1px solid var(--ring); border-radius: 10px; padding: 8px; max-height: 32vh; overflow: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; line-height: 1.45 }
-.logline { display: grid; grid-template-columns: 120px 80px 1fr; gap: 8px; padding: 4px 6px; border-bottom: 1px dashed #1c2130 }
-.logline:last-child { border-bottom: 0 }
-.lvl-info { color: #8a93a6 }
-.lvl-success { color: #75f0a6 }
-.lvl-error { color: #ff7b9c }
-.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }.container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+header { position: sticky; top: 0; z-index: 20; background: linear-gradient(180deg, rgba(11,13,18,.9) 0, rgba(11,13,18,.6) 100%); backdrop-filter: saturate(140%) blur(8px); border-bottom: 1px solid var(--border); }
+.topbar { display: flex; align-items: center; gap: 10px; padding: 14px 20px; }
+.brand { font-weight: 700; letter-spacing: .3px; }
+.spacer { flex: 1; }
 
-dialog.modal { position: fixed; inset: 0; display: none; place-items: center; background: rgba(0,0,0,.5); z-index: 60 }
-dialog.modal[open] { display: grid }
-.modal-card { width: min(720px, calc(100% - 24px)); background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; padding: .6rem .9rem; border-radius: 12px; border: 1px solid var(--border); background: linear-gradient(180deg, #162137, #12192d); color: var(--text); box-shadow: var(--shadow); cursor: pointer; transition: .18s ease transform, .18s ease background, .18s ease border; }
+.btn:hover { transform: translateY(-1px); border-color: #2a3a66; }
+.btn:disabled { opacity: .55; cursor: not-allowed; filter: grayscale(.2); }
+.primary { background: linear-gradient(180deg, var(--primary), var(--primary-2)); border-color: #2f58c8; }
+.ghost { background: transparent; border-color: var(--border); }
+.pill { display: inline-block; background: #233255; color: #b8c6e3; border: 1px solid var(--border); padding: .15rem .5rem; border-radius: 999px; font-size: .75rem; }
+.muted { color: var(--muted); }
+
+.hero { padding: 24px 0 8px; }
+.hero h1 { margin: 0 0 6px; font-size: 1.6rem; }
+
+.grid { display: grid; gap: 18px; grid-template-columns: repeat(12, 1fr); }
+.card { background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px; position: relative; overflow: hidden; }
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.row .btn { white-space: nowrap; }
+
+.col-4 { grid-column: span 4; }
+.col-12 { grid-column: span 12; }
+@media (max-width: 960px) { .col-4 { grid-column: span 12; } .topbar .hide-sm { display: none; } }
+
+footer { margin: 28px 0 12px; color: var(--muted); font-size: .9rem; }
+
+dialog { border: 1px solid var(--border); border-radius: 16px; background: #0c1324; color: var(--text); box-shadow: var(--shadow); width: min(820px, 96vw); }
+dialog::backdrop { background: rgba(5,8,14,.6); backdrop-filter: blur(2px); }
+
+input[type="text"], textarea { width: 100%; padding: .7rem .8rem; color: var(--text); background: #0d1426; border: 1px solid var(--border); border-radius: 12px; outline: none; box-shadow: inset 0 1px 0 rgba(255,255,255,.03); }
+label { display: block; font-weight: 600; margin-bottom: 6px; color: #c8d5f3; }
 
   </style>
 </head>
 <body>
   <header>
-    <div class="nav">
-      <div class="brand"><span class="logo"></span> conferenceBuddy</div>
-      <div class="row">
-        <a class="btn primary" href="conferences.html">Open Conferences</a>
-        <button class="btn" id="settingsBtn" title="Settings">⚙︎ Settings</button>
-      </div>
+    <div class="topbar container">
+      <div class="brand">conferenceBuddy <span class="muted">· Home</span></div>
+      <span class="pill hide-sm">n8n Flow Endpoints</span>
+      <div class="spacer"></div>
+      <a class="btn" href="conferences.html">Open Conferences</a>
+      <a class="btn" href="sessions.html">Open Sessions</a>
+      <button class="btn" id="openSettings">⚙︎ Settings</button>
+      <button class="btn ghost" id="openDebug">🐞 Debug</button>
     </div>
-  </header>  <main>
+  </header>  <main class="container">
     <section class="hero">
-      <h1>Welcome to conferenceBuddy</h1>
-      <p>Manage conferences, sessions, vendors, and reports through n8n Flow Endpoints.</p>
-      <div class="row">
+      <h1># Welcome to conferenceBuddy</h1>
+      <p class="muted">Manage conferences, sessions, vendors, and reports through n8n Flow Endpoints.</p>
+      <div class="row" style="margin-top: 8px;">
         <a class="btn primary" href="conferences.html">Go to Conferences</a>
-        <span class="pill">Configure endpoints with ⚙︎ Settings</span>
+        <a class="btn" href="sessions.html">Go to Sessions</a>
+        <button class="btn" id="openSettings2">Configure endpoints with ⚙︎ Settings</button>
       </div>
     </section><section class="grid">
-  <div class="card">
+  <div class="card col-4">
     <h3>Conferences</h3>
     <p class="muted">Create, view, and report on conferences with enriched data.</p>
     <div class="row">
@@ -86,7 +93,7 @@ dialog.modal[open] { display: grid }
     </div>
   </div>
 
-  <div class="card">
+  <div class="card col-4">
     <h3>Vendors</h3>
     <p class="muted">Browse vendors, assign booths, and track leads.</p>
     <div class="row">
@@ -95,16 +102,16 @@ dialog.modal[open] { display: grid }
     </div>
   </div>
 
-  <div class="card">
+  <div class="card col-4">
     <h3>Sessions</h3>
     <p class="muted">Plan sessions, speakers, and feedback analytics.</p>
     <div class="row">
-      <button class="btn" disabled>Open (un-mapped)</button>
-      <span class="pill">Coming soon</span>
+      <a class="btn" href="sessions.html">Open</a>
+      <span class="pill">New</span>
     </div>
   </div>
 
-  <div class="card">
+  <div class="card col-4">
     <h3>Analytics</h3>
     <p class="muted">Dashboards and KPI trends for conferences.</p>
     <div class="row">
@@ -113,7 +120,7 @@ dialog.modal[open] { display: grid }
     </div>
   </div>
 
-  <div class="card">
+  <div class="card col-4">
     <h3>Help & Docs</h3>
     <p class="muted">API specs, troubleshooting, and best practices.</p>
     <div class="row">
@@ -123,120 +130,121 @@ dialog.modal[open] { display: grid }
   </div>
 </section>
 
-  </main>  <footer>© conferenceBuddy — built for n8n Flow Endpoints</footer>  <!-- Settings Modal (moved here from conferences.html) -->  <dialog class="modal" id="settingsModal">
-    <div class="modal-card">
-      <div class="row" style="justify-content: space-between; align-items: start">
-        <div>
-          <h3 style="margin:0">Settings</h3>
-          <p class="muted">Configure your n8n Flow Endpoint base URL and auth. Stored locally in your browser.</p>
-        </div>
-        <button class="btn" id="closeSettings">✕</button>
-      </div>
-      <div class="grid" style="grid-template-columns: 1fr 1fr; gap:12px; margin-top:8px">
-        <div class="row" style="flex-direction:column; align-items:stretch">
-          <label class="muted">n8n Base URL (no trailing slash)</label>
-          <input id="cfgBaseUrl" placeholder="https://your-n8n/webhook" />
-        </div>
-        <div class="row" style="flex-direction:column; align-items:stretch">
-          <label class="muted">Use GET (instead of POST)</label>
-          <select id="cfgUseGet"><option value="false">POST (default)</option><option value="true">GET</option></select>
-        </div>
-      </div>
-      <div class="grid" style="grid-template-columns: 1fr 1fr; gap:12px; margin-top:8px">
-        <div class="row" style="flex-direction:column; align-items:stretch">
-          <label class="muted">Auth Header (optional)</label>
-          <input id="cfgAuthHeader" placeholder="X-API-Key" />
-        </div>
-        <div class="row" style="flex-direction:column; align-items:stretch">
-          <label class="muted">Auth Value (optional)</label>
-          <input id="cfgAuthValue" placeholder="abcdef123456" />
-        </div>
-      </div>
-      <div class="row" style="flex-direction:column; align-items:stretch; margin-top:8px">
-        <label class="muted">Flow Path Mapping (JSON)</label>
-        <textarea id="cfgFlows" spellcheck="false" style="min-height: 140px; background:#0b0f1a; color:#e7ecf7; border:1px solid var(--ring); border-radius: 12px; padding:10px"></textarea>
-        <div class="muted" style="font-size: 13px">Ensure these align with your n8n API spec and deployed flow endpoints.</div>
-      </div>
-      <div class="row" style="margin-top:8px">
-        <button class="btn" id="testSettings">Test connection</button>
-        <div id="testResult" class="muted"></div>
-        <button class="btn primary" id="saveSettings" style="margin-left:auto">Save</button>
-      </div>
-    </div>
-  </dialog>  <!-- Debug Drawer --><button class="btn debug-toggle" id="debugToggle">🐞 Debug</button>
+<footer>
+  © conferenceBuddy — built for n8n Flow Endpoints
+</footer>
 
-  <div class="debug-drawer" id="debugDrawer">
-    <div class="debug-card">
-      <div class="debug-head">
-        <strong>Debug log</strong>
-        <div class="debug-actions">
-          <button class="btn" id="dbgPause">Pause</button>
-          <button class="btn" id="dbgCopy">Copy</button>
-          <button class="btn" id="dbgClear">Clear</button>
-          <button class="btn" id="dbgClose">Close</button>
-        </div>
+  </main>  <!-- Settings Modal -->  <dialog id="settingsDlg">
+    <form method="dialog" class="container" style="padding:18px;">
+      <div class="row" style="justify-content: space-between; align-items:center;">
+        <h2>Settings</h2>
+        <button class="btn ghost" value="cancel">✕</button>
       </div>
-      <div id="debugBody" class="debug-body" aria-live="polite"></div>
+      <p class="muted">Configure your n8n Flow Endpoint base URL and auth. Stored locally in your browser.</p><div class="grid" style="gap: 12px; grid-template-columns: repeat(12, 1fr);">
+    <div class="col-12">
+      <label for="baseUrl">n8n Base URL (no trailing slash)</label>
+      <input id="baseUrl" type="text" placeholder="https://flows.example.com" />
     </div>
-  </div>  <script>
-    // Shared config
-    const DEFAULT_CONFIG = {
-      baseUrl: "",
-      useGet: false,
-      authHeader: "",
-      authValue: "",
-      flows: {
-        listConferences: "/conferences/list",
-        getConference: "/conferences/get",
-        createConference: "/conferences/create",      // { name, startDate, endDate, location, timezone, description, aims, tags }
-        vendorsByConference: "/vendors/by-conference",
-        sessionsByConference: "/sessions/by-conference",
-        vendorStats: "/vendors/stats",
-        sessionStats: "/sessions/stats",
-        reportEOD: "/reports/eod",
-        reportEOC: "/reports/eoc",
-        reportVendor: "/reports/vendor",
-        reportSession: "/reports/session"
-      }
+    <div class="col-12 row">
+      <label class="pill">Use GET (instead of POST)</label>
+      <label class="row" style="gap:6px;">
+        <input id="useGet" type="checkbox" />
+        <span class="muted">POST (default) / GET</span>
+      </label>
+    </div>
+    <div class="col-6">
+      <label for="authHeader">Auth Header (optional)</label>
+      <input id="authHeader" type="text" placeholder="Authorization" />
+    </div>
+    <div class="col-6">
+      <label for="authValue">Auth Value (optional)</label>
+      <input id="authValue" type="text" placeholder="Bearer eyJ..." />
+    </div>
+    <div class="col-12">
+      <label for="mapping">Flow Path Mapping (JSON)</label>
+      <textarea id="mapping" spellcheck="false" style="min-height: 180px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;"></textarea>
+      <div class="muted">Ensure these align with your n8n API spec and deployed flow endpoints.</div>
+    </div>
+  </div>
+
+  <div class="row" style="justify-content: flex-end; margin-top: 14px;">
+    <button class="btn ghost" id="testConn" type="button">Test connection</button>
+    <button class="btn" id="saveSettings" type="submit" value="default">Save</button>
+  </div>
+</form>
+
+  </dialog>  <!-- Debug Modal -->  <dialog id="debugDlg">
+    <form method="dialog" class="container" style="padding:18px;">
+      <div class="row" style="justify-content: space-between; align-items:center;">
+        <h2>🐞 Debug</h2>
+        <button class="btn ghost" value="cancel">Close</button>
+      </div>
+      <div class="card" style="max-height: 50vh; overflow: auto; background:#0a0f1b">
+        <pre id="debugLog" style="margin:0; white-space: pre-wrap; word-wrap: break-word;"></pre>
+      </div>
+    </form>
+  </dialog>  <script>
+    const DEFAULT_MAPPING = {
+      health: "/health",
+      listConferencesActive: "/conferences/active",
+      listConferences: "/conferences/list",
+      listVendors: "/vendors/list",
+      saveSession: "/sessions/create",
+      listSessions: "/sessions/list",
+      uploadAsset: "/assets/upload"
     };
-    let CONFIG = loadConfig();
-    function loadConfig(){ try { return { ...DEFAULT_CONFIG, ...(JSON.parse(localStorage.getItem("cb.cfg")||"{}")) } } catch { return DEFAULT_CONFIG } }
-    function saveConfig(){ localStorage.setItem("cb.cfg", JSON.stringify(CONFIG)); }
 
-    // Debug logger (homepage)
+    const settings = {
+      get() {
+        try { return JSON.parse(localStorage.getItem('cb.settings')) || { baseUrl: '', useGet: false, authHeader: '', authValue: '', mapping: DEFAULT_MAPPING }; }
+        catch { return { baseUrl: '', useGet: false, authHeader: '', authValue: '', mapping: DEFAULT_MAPPING }; }
+      },
+      set(obj) { localStorage.setItem('cb.settings', JSON.stringify(obj)); }
+    };
+
     const $ = s => document.querySelector(s);
-    function escapeHtml(s){ return s?.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c])) }
-    function sanitize(obj){ try { const clone = JSON.parse(JSON.stringify(obj||{})); if(clone.authValue) clone.authValue='***'; return clone } catch { return obj } }
-    const Debug = { paused:false, add(level, message, data){ const body=$('#debugBody'); const line=document.createElement('div'); line.className=`logline lvl-${level}`; const ts = new Date().toLocaleTimeString([], {hour12:false}); const dataStr = data? escapeHtml(JSON.stringify(sanitize(data))) : ''; line.innerHTML = `<span class="mono">${ts}</span><span class="mono">${level.toUpperCase()}</span><span>${escapeHtml(message)}${data?` — <span class=\"mono\">${dataStr}</span>`:''}</span>`; body.appendChild(line); if(!Debug.paused){ body.scrollTop = body.scrollHeight } } };
-    function logInfo(m,d){ Debug.add('info',m,d) } function logSuccess(m,d){ Debug.add('success',m,d) } function logError(m,d){ Debug.add('error',m,d) }
 
-    // Debug UI
-    $('#debugToggle').addEventListener('click', ()=> $('#debugDrawer').toggleAttribute('open'));
-    $('#dbgClose').addEventListener('click', ()=> $('#debugDrawer').removeAttribute('open'));
-    $('#dbgClear').addEventListener('click', ()=> $('#debugBody').innerHTML='');
-    $('#dbgCopy').addEventListener('click', async ()=>{ const text = Array.from(document.querySelectorAll('#debugBody .logline')).map(n=> n.textContent).join('\n'); try{ await navigator.clipboard.writeText(text); logSuccess('Copied debug log'); }catch{ logError('Copy failed') }});
-    $('#dbgPause').addEventListener('click', (e)=>{ Debug.paused=!Debug.paused; e.target.textContent = Debug.paused ? 'Resume':'Pause'; });
+    function toast(msg){ console.log('[toast]', msg); }
 
-    // Settings modal
-    $('#settingsBtn').addEventListener('click', ()=>{ $('#cfgBaseUrl').value = CONFIG.baseUrl; $('#cfgUseGet').value = String(CONFIG.useGet); $('#cfgAuthHeader').value = CONFIG.authHeader; $('#cfgAuthValue').value = CONFIG.authValue; $('#cfgFlows').value = JSON.stringify(CONFIG.flows, null, 2); $('#settingsModal').showModal(); logInfo('Settings opened'); });
-    $('#closeSettings').addEventListener('click', ()=> $('#settingsModal').close());
-    $('#saveSettings').addEventListener('click', ()=>{ CONFIG.baseUrl = $('#cfgBaseUrl').value.trim(); CONFIG.useGet = $('#cfgUseGet').value==='true'; CONFIG.authHeader = $('#cfgAuthHeader').value.trim(); CONFIG.authValue = $('#cfgAuthValue').value.trim(); try { CONFIG.flows = JSON.parse($('#cfgFlows').value) } catch { logError('Invalid JSON in Flow Mapping'); return } saveConfig(); $('#settingsModal').close(); logSuccess('Settings saved'); });
-
-    // Minimal callFlow for test
-    async function callFlow(key, payload={}){
-      const base = CONFIG.baseUrl?.trim(); const path = CONFIG.flows[key]; if(!base||!path){ const err=`Missing baseUrl or flow path for ${key}`; logError(err); throw new Error(err) }
-      const url = base + path; const headers={'Content-Type':'application/json'}; if(CONFIG.authHeader && CONFIG.authValue){ headers[CONFIG.authHeader] = CONFIG.authValue }
-      const init = CONFIG.useGet ? { method:'GET', headers } : { method:'POST', headers, body: JSON.stringify(payload) };
-      const finalUrl = CONFIG.useGet && payload && Object.keys(payload).length ? url + '?' + new URLSearchParams(payload).toString() : url;
-      logInfo(`→ ${key} ${init.method} ${path}`);
-      const res = await fetch(finalUrl, init).catch(e=>{ throw new Error('Network error: '+e.message) });
-      if(!res.ok){ const t = await res.text().catch(()=> '(no body)'); logError(`✖ ${key} ${res.status} ${res.statusText}`, { body: t.slice(0,400) }); throw new Error(`Flow ${key} failed: ${res.status} ${res.statusText}`) }
-      const ct = res.headers.get('content-type')||''; logSuccess(`✓ ${key} ${res.status}`, { contentType: ct }); return ct.includes('application/json') ? res.json() : res.text();
+    function loadSettingsUI(){
+      const cfg = settings.get();
+      $('#baseUrl').value = cfg.baseUrl || '';
+      $('#useGet').checked = !!cfg.useGet;
+      $('#authHeader').value = cfg.authHeader || '';
+      $('#authValue').value = cfg.authValue || '';
+      $('#mapping').value = JSON.stringify(cfg.mapping || DEFAULT_MAPPING, null, 2);
     }
 
-    document.getElementById('testSettings').addEventListener('click', async ()=>{
-      try { await callFlow('listConferences', {}); document.getElementById('testResult').textContent = '✅ Connected'; }
-      catch(e){ document.getElementById('testResult').textContent = '❌ ' + e.message }
+    async function api(pathKey){
+      const cfg = settings.get();
+      if (!cfg.baseUrl) throw new Error('Base URL not set');
+      const path = (cfg.mapping||DEFAULT_MAPPING)[pathKey];
+      const url = cfg.baseUrl + path;
+      const headers = { 'Accept': 'application/json' };
+      if (cfg.authHeader && cfg.authValue) headers[cfg.authHeader] = cfg.authValue;
+      const res = await fetch(url, { headers });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }
+
+    async function testConnection(){
+      try { await api('health'); toast('Connected to n8n ✓'); }
+      catch(e){ toast('Connection failed: ' + e.message); }
+    }
+
+    // Events
+    document.addEventListener('DOMContentLoaded', loadSettingsUI);
+    $('#openSettings').addEventListener('click', ()=> $('#settingsDlg').showModal());
+    $('#openSettings2').addEventListener('click', ()=> $('#settingsDlg').showModal());
+    $('#openDebug').addEventListener('click', ()=> $('#debugDlg').showModal());
+    $('#saveSettings').addEventListener('click', (e)=> {
+      e.preventDefault();
+      try {
+        const mapping = JSON.parse($('#mapping').value || '{}');
+        settings.set({ baseUrl: $('#baseUrl').value.trim(), useGet: $('#useGet').checked, authHeader: $('#authHeader').value.trim(), authValue: $('#authValue').value.trim(), mapping });
+        $('#settingsDlg').close(); toast('Settings saved');
+      } catch (e) { toast('Invalid mapping JSON: ' + e.message); }
     });
+    $('#testConn').addEventListener('click', testConnection);
   </script></body>
 </html>
