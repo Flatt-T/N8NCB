@@ -1,0 +1,602 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>conferenceBuddy · Conferences</title>
+  <meta name="description" content="Create, view, and report on conferences using n8n Flow Endpoints" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #0b0d12;
+      --card: #121623;
+      --muted: #8a93a6;
+      --text: #e7ecf7;
+      --primary: #7c5cff; /* accent */
+      --primary-600:#6847ff;
+      --danger: #ef476f;
+      --ok: #4cc9f0;
+      --ring: #2a2f3d;
+      --border: #1c2130;
+      --shadow: 0 8px 24px rgba(0,0,0,.35);
+      --radius: 16px;
+    }
+    * { box-sizing: border-box }
+    html, body { height: 100% }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 100% -20%, rgba(124,92,255,0.18), transparent),
+                  radial-gradient(1000px 600px at -10% 0%, rgba(76,201,240,0.12), transparent),
+                  var(--bg);
+      color: var(--text);
+    }
+    a { color: var(--ok); text-decoration: none }
+    header {
+      position: sticky; top: 0; z-index: 5;
+      backdrop-filter: saturate(1.2) blur(6px);
+      background: linear-gradient(to bottom, rgba(11,13,18,0.9), rgba(11,13,18,0.6));
+      border-bottom: 1px solid var(--border);
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; padding: 14px 16px; max-width: 1200px; margin: 0 auto;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .3px }
+    .brand .logo { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, var(--primary), var(--ok)); box-shadow: var(--shadow) }
+    .nav-actions { display: flex; align-items: center; gap: 8px }
+    .btn, button { appearance: none; border: 1px solid var(--ring); background: #0f1320; color: var(--text); padding: 10px 14px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: .2s ease; }
+    .btn:hover { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(124,92,255,.12) }
+    .btn.primary { background: linear-gradient(180deg, var(--primary), var(--primary-600)); border: none }
+    .btn.ghost { background: transparent }
+    .icon { width: 20px; height: 20px; display: inline-grid; place-items: center }main { max-width: 1200px; margin: 16px auto; padding: 0 16px; }
+.grid { display: grid; grid-template-columns: 1fr; gap: 16px }
+@media (min-width: 980px) {
+  .grid { grid-template-columns: 360px 1fr }
+}
+.card { background: linear-gradient(180deg, rgba(18,22,35,.98), rgba(18,22,35,.9)); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow) }
+.card h3 { margin: 0 0 8px; font-size: 18px }
+.card .p { color: var(--muted); font-size: 14px }
+.section { padding: 16px }
+.divider { height: 1px; background: var(--border); margin: 12px 0 }
+
+.field { display: grid; gap: 6px; margin-bottom: 12px }
+label { font-size: 13px; color: var(--muted) }
+input, textarea, select { width: 100%; background: #0b0f1a; color: var(--text); border: 1px solid var(--ring); border-radius: 12px; padding: 10px 12px; outline: none; transition: .2s; }
+input:focus, textarea:focus, select:focus{ border-color: var(--primary); box-shadow: 0 0 0 4px rgba(124,92,255,.12) }
+textarea { min-height: 72px; resize: vertical }
+
+.list { display: flex; flex-direction: column; gap: 8px; }
+.item { border: 1px solid var(--ring); background: #0c101b; border-radius: 12px; padding: 10px; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; cursor: pointer }
+.item:hover { border-color: var(--primary) }
+.item .title { font-weight: 600 }
+.item .meta { font-size: 12px; color: var(--muted) }
+.item .badge { background: #141a2a; border: 1px solid var(--ring); padding: 2px 8px; border-radius: 999px; font-size: 12px; color: var(--muted) }
+
+.toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap }
+.toolbar .grow { flex: 1 }
+
+.stack { display: grid; gap: 12px }
+.two { display: grid; gap: 12px; grid-template-columns: 1fr; }
+@media (min-width: 720px) { .two { grid-template-columns: 1fr 1fr } }
+
+.detail { display: grid; gap: 12px }
+.row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap }
+
+.tag { display: inline-block; padding: 4px 8px; border: 1px solid var(--ring); border-radius: 999px; font-size: 12px; color: var(--muted) }
+
+.pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--ring); border-radius: 12px; color: var(--muted) }
+
+.empty { text-align: center; color: var(--muted); padding: 24px }
+
+.skeleton { position: relative; overflow: hidden; background: #111524; border: 1px solid var(--ring); border-radius: 12px; height: 56px }
+.skeleton::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,.06), transparent); transform: translateX(-100%); animation: shine 1.2s infinite }
+@keyframes shine { 100% { transform: translateX(100%) } }
+
+/* Tabs */
+.tabs { display: flex; gap: 6px; flex-wrap: wrap }
+.tab { border: 1px solid var(--ring); padding: 8px 12px; border-radius: 10px; cursor: pointer; color: var(--muted) }
+.tab.active { color: var(--text); border-color: var(--primary) }
+
+/* Toasts */
+#toasts { position: fixed; right: 16px; bottom: 16px; display: grid; gap: 10px; z-index: 50 }
+.toast { background: #0c101b; border: 1px solid var(--ring); border-left: 4px solid var(--primary); border-radius: 12px; padding: 12px 14px; box-shadow: var(--shadow) }
+
+/* Modal */
+.modal { position: fixed; inset: 0; display: none; place-items: center; background: rgba(0,0,0,.5); z-index: 60 }
+.modal[open] { display: grid }
+.modal-card { width: min(720px, calc(100% - 24px)); background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px }
+
+.download-link { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px dashed var(--ring); border-radius: 10px }
+.muted { color: var(--muted) }
+.right { margin-left: auto }
+
+  </style>
+</head>
+<body>
+<header>
+  <div class="nav">
+    <div class="brand"><span class="logo"></span> conferenceBuddy</div>
+    <div class="nav-actions">
+      <button class="btn ghost" id="refreshBtn" title="Refresh data">⟳</button>
+      <button class="btn" id="settingsBtn" title="Settings">⚙︎ Settings</button>
+      <a class="btn" href="index.html" title="Back to Home">Home</a>
+      <a class="btn primary" href="#create" title="Create Conference">+ New</a>
+    </div>
+  </div>
+</header><main class="grid">
+  <!-- Left rail: Create + List -->
+  <section class="card" id="create">
+    <div class="section">
+      <h3>Create conference</h3>
+      <p class="p">Fill in the details and save. Data is sent to your n8n Flow Endpoint (<code>createConference</code>).</p>
+      <form id="createForm" class="stack" autocomplete="off">
+        <div class="field"><label for="cName">Name</label><input id="cName" name="name" placeholder="e.g., DevSummit Europe 2026" required /></div>
+        <div class="two">
+          <div class="field"><label for="cStart">Start date</label><input id="cStart" name="startDate" type="date" required /></div>
+          <div class="field"><label for="cEnd">End date</label><input id="cEnd" name="endDate" type="date" required /></div>
+        </div>
+        <div class="two">
+          <div class="field"><label for="cLocation">Location</label><input id="cLocation" name="location" placeholder="City, Country" /></div>
+          <div class="field"><label for="cTimezone">Timezone</label><input id="cTimezone" name="timezone" placeholder="Europe/London" /></div>
+        </div>
+        <div class="field"><label for="cDesc">Description</label><textarea id="cDesc" name="description" placeholder="Short description"></textarea></div>
+        <div class="field"><label for="cTags">Tags (comma‑separated)</label><input id="cTags" name="tags" placeholder="Cloud, AI, Security" /></div>
+        <div class="row">
+          <button class="btn primary" type="submit">Create</button>
+          <button class="btn" type="reset">Reset</button>
+          <span id="createHint" class="muted">Saved items appear in the list.</span>
+        </div>
+      </form>
+    </div>
+    <div class="divider"></div>
+    <div class="section">
+      <div class="toolbar">
+        <h3 style="margin:0">Conferences</h3>
+        <input class="grow" id="search" placeholder="Search by name, location…" />
+      </div>
+      <div class="list" id="confList" aria-live="polite">
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton"></div>
+      </div>
+    </div>
+  </section>  <!-- Right: Details -->  <section class="card" id="details">
+    <div class="section">
+      <div class="row">
+        <h3 style="margin:0">Details</h3>
+        <div class="right pill" id="selectedMeta">No conference selected</div>
+      </div>
+      <div id="emptyState" class="empty">Select a conference from the list to view enriched data, sessions, vendors, and reports.</div>
+      <div id="detailWrap" class="detail" style="display:none">
+        <div>
+          <div class="row" style="justify-content: space-between">
+            <div id="confTitle" class="title" style="font-size:20px; font-weight:700"></div>
+            <div class="row">
+              <button id="eodBtn" class="btn">End‑of‑Day Report</button>
+              <button id="eocBtn" class="btn">End‑of‑Conference Report</button>
+            </div>
+          </div>
+          <div class="p" id="confMeta"></div>
+          <div class="p" id="confDesc" style="margin-top:6px"></div>
+        </div>
+        <div class="tabs" role="tablist">
+          <button class="tab active" data-tab="overview" role="tab" aria-selected="true">Overview</button>
+          <button class="tab" data-tab="vendors" role="tab">Vendors</button>
+          <button class="tab" data-tab="sessions" role="tab">Sessions</button>
+          <button class="tab" data-tab="reports" role="tab">Reports</button>
+        </div>
+        <div id="tab-overview" class="stack" role="tabpanel">
+          <div class="two">
+            <div class="card section">
+              <div class="row" style="justify-content: space-between"><strong>Key metrics</strong><span class="muted" id="ovrUpdated"></span></div>
+              <div class="two" style="margin-top:8px">
+                <div class="pill"><span>🧑‍🤝‍🧑</span><div><div>Total attendees</div><strong id="mAttendees">–</strong></div></div>
+                <div class="pill"><span>⭐</span><div><div>Avg session rating</div><strong id="mAvgRating">–</strong></div></div>
+                <div class="pill"><span>🏪</span><div><div>Vendors</div><strong id="mVendors">–</strong></div></div>
+                <div class="pill"><span>🗓️</span><div><div>Sessions</div><strong id="mSessions">–</strong></div></div>
+              </div>
+            </div>
+            <div class="card section">
+              <strong>Sessions by day</strong>
+              <canvas id="chartSessionsByDay" height="160"></canvas>
+            </div>
+          </div>
+        </div>
+        <div id="tab-vendors" class="stack" role="tabpanel" hidden>
+          <div class="row" style="justify-content: space-between"><strong>Vendors</strong>
+            <div class="row">
+              <button id="vendorReportSelected" class="btn">Report (selected)</button>
+            </div>
+          </div>
+          <div class="list" id="vendorList"></div>
+        </div>
+        <div id="tab-sessions" class="stack" role="tabpanel" hidden>
+          <div class="row" style="justify-content: space-between"><strong>Sessions</strong>
+            <div class="row">
+              <button id="sessionReportSelected" class="btn">Report (selected)</button>
+            </div>
+          </div>
+          <div class="list" id="sessionList"></div>
+        </div>
+        <div id="tab-reports" class="stack" role="tabpanel" hidden>
+          <div class="row" style="justify-content: space-between"><strong>Generate reports</strong><span class="muted">Outputs download automatically when ready</span></div>
+          <div class="two">
+            <div class="card section">
+              <div class="row" style="justify-content: space-between"><strong>End of Day</strong>
+                <input type="date" id="eodDate" />
+              </div>
+              <button id="eodBtn2" class="btn">Generate EOD</button>
+            </div>
+            <div class="card section">
+              <strong>End of Conference</strong>
+              <button id="eocBtn2" class="btn">Generate EOC</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main><div id="toasts"></div><!-- Settings Modal --><dialog class="modal" id="settingsModal">
+  <div class="modal-card">
+    <div class="row" style="justify-content: space-between; align-items: start">
+      <div>
+        <h3 style="margin:0">Settings</h3>
+        <p class="p">Configure your n8n Flow Endpoint base URL and auth. These are stored in your browser only.</p>
+      </div>
+      <button class="btn" id="closeSettings">✕</button>
+    </div>
+    <div class="two" style="margin-top: 8px">
+      <div class="field"><label>n8n Base URL (no trailing slash)</label><input id="cfgBaseUrl" placeholder="https://your-n8n/webhook" /></div>
+      <div class="field"><label>Use GET (instead of POST)</label>
+        <select id="cfgUseGet"><option value="false">POST (default)</option><option value="true">GET</option></select>
+      </div>
+    </div>
+    <div class="two">
+      <div class="field"><label>Auth Header (optional)</label><input id="cfgAuthHeader" placeholder="X-API-Key" /></div>
+      <div class="field"><label>Auth Value (optional)</label><input id="cfgAuthValue" placeholder="abcdef123456" /></div>
+    </div>
+    <div class="field"><label>Flow Path Mapping (JSON)</label>
+      <textarea id="cfgFlows" spellcheck="false" style="min-height: 140px"></textarea>
+      <div class="p">Ensure these align with your <em>n8n API specification</em>. Update to match your deployed flow endpoints.</div>
+    </div>
+    <div class="row">
+      <button class="btn" id="testSettings">Test connection</button>
+      <div id="testResult" class="p"></div>
+      <button class="btn primary right" id="saveSettings">Save</button>
+    </div>
+  </div>
+</dialog><script>
+/**
+ * conferenceBuddy — Conferences SPA
+ *
+ * This front-end talks to n8n Flow Endpoints for all data/functions.
+ *
+ * IMPORTANT: Update the Flow Path Mapping in Settings to match your n8n API spec.
+ * Each function here calls `${BASE_URL}${flowPath}` via fetch().
+ */
+
+const DEFAULT_CONFIG = {
+  baseUrl: "",
+  useGet: false,
+  authHeader: "",
+  authValue: "",
+  flows: {
+    listConferences: "/conferences/list",
+    getConference: "/conferences/get",           // expects { conferenceId }
+    createConference: "/conferences/create",      // expects { name, startDate, endDate, location, timezone, description, tags }
+    vendorsByConference: "/vendors/by-conference", // expects { conferenceId }
+    sessionsByConference: "/sessions/by-conference", // expects { conferenceId }
+    vendorStats: "/vendors/stats",                // expects { conferenceId }
+    sessionStats: "/sessions/stats",              // expects { conferenceId }
+    reportEOD: "/reports/eod",                    // expects { conferenceId, date }
+    reportEOC: "/reports/eoc",                    // expects { conferenceId }
+    reportVendor: "/reports/vendor",              // expects { conferenceId, vendorIds: [] }
+    reportSession: "/reports/session"             // expects { conferenceId, sessionIds: [] }
+  }
+};
+
+let CONFIG = loadConfig();
+function loadConfig(){
+  try { return { ...DEFAULT_CONFIG, ...(JSON.parse(localStorage.getItem("cb.cfg")||"{}")) } } catch { return DEFAULT_CONFIG }
+}
+function saveConfig(){ localStorage.setItem("cb.cfg", JSON.stringify(CONFIG)); }
+
+// --- Utilities ---
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+function toast(msg, type="info"){ const node = document.createElement('div'); node.className='toast'; node.innerHTML = msg; $('#toasts').appendChild(node); setTimeout(()=> node.remove(), 4000); }
+function fmtDate(d){ if(!d) return "—"; const dt = (d instanceof Date) ? d : new Date(d); return dt.toLocaleDateString(undefined, { year:'numeric', month:'short', day:'2-digit' }); }
+function fmtNum(n){ if(n===undefined||n===null) return "—"; return new Intl.NumberFormat().format(n) }
+function byId(id){ return (x)=> x.id===id }
+
+// n8n fetch wrapper
+async function callFlow(key, payload={}){
+  const base = CONFIG.baseUrl?.trim();
+  const path = CONFIG.flows[key];
+  if(!base || !path){ throw new Error(`Missing baseUrl or flow path for ${key}`) }
+  const url = base + path;
+  const headers = { 'Content-Type': 'application/json' };
+  if(CONFIG.authHeader && CONFIG.authValue){ headers[CONFIG.authHeader] = CONFIG.authValue }
+  const init = CONFIG.useGet
+    ? { method: 'GET', headers }
+    : { method: 'POST', headers, body: JSON.stringify(payload) };
+
+  const finalUrl = CONFIG.useGet && payload && Object.keys(payload).length
+    ? url + '?' + new URLSearchParams(payload).toString()
+    : url;
+
+  const res = await fetch(finalUrl, init);
+  if(!res.ok){
+    let text = await res.text().catch(()=>"(no body)");
+    throw new Error(`Flow ${key} failed: ${res.status} ${res.statusText} — ${text}`)
+  }
+  const contentType = res.headers.get('content-type')||'';
+  if(contentType.includes('application/json')) return res.json();
+  // If file download directly
+  const blob = await res.blob();
+  return { __blob: blob, __filename: filenameFromDisposition(res.headers.get('content-disposition')) };
+}
+
+function filenameFromDisposition(dispo){
+  if(!dispo) return undefined;
+  const m = /filename\*=UTF-8''([^;]+)|filename="?([^";]+)"?/i.exec(dispo);
+  return decodeURIComponent(m?.[1]||m?.[2]||'download');
+}
+
+function triggerDownloadFromBlob(blob, filename='download'){
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob); link.download = filename; document.body.appendChild(link); link.click(); link.remove(); setTimeout(()=> URL.revokeObjectURL(link.href), 5000);
+}
+
+// --- State ---
+let state = {
+  conferences: [],
+  selectedId: null,
+  charts: { sessionsByDay: null },
+  selectedVendorIds: new Set(),
+  selectedSessionIds: new Set()
+};
+
+// --- UI Binding ---
+$('#settingsBtn').addEventListener('click', () => openSettings());
+$('#closeSettings').addEventListener('click', () => $('#settingsModal').close());
+$('#saveSettings').addEventListener('click', () => { saveSettingsFromUI(); toast('Settings saved'); $('#settingsModal').close(); refreshAll(); });
+$('#testSettings').addEventListener('click', testConnection);
+$('#refreshBtn').addEventListener('click', refreshAll);
+
+$('#createForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(e.target).entries());
+  if(data.tags) data.tags = data.tags.split(',').map(s=>s.trim()).filter(Boolean);
+  try {
+    const out = await callFlow('createConference', data);
+    toast('Conference created');
+    e.target.reset();
+    await loadConferences();
+    if(out?.id){ selectConference(out.id) }
+  } catch(err){ toast(`<strong>Error:</strong> ${err.message}`) }
+});
+
+$('#search').addEventListener('input', renderConferenceList);
+
+// Tab handling
+$$('.tab').forEach(btn=> btn.addEventListener('click', ()=>{
+  $$('.tab').forEach(b=> b.classList.remove('active'));
+  btn.classList.add('active');
+  const name = btn.dataset.tab;
+  $$('#detailWrap [role="tabpanel"]').forEach(p=> p.hidden = true);
+  $(`#tab-${name}`).hidden = false;
+}));
+
+$('#eodBtn').addEventListener('click', ()=> generateEOD());
+$('#eocBtn').addEventListener('click', ()=> generateEOC());
+$('#eodBtn2').addEventListener('click', ()=> generateEOD());
+$('#eocBtn2').addEventListener('click', ()=> generateEOC());
+$('#vendorReportSelected').addEventListener('click', ()=> generateVendorReport());
+$('#sessionReportSelected').addEventListener('click', ()=> generateSessionReport());
+
+function openSettings(){
+  $('#cfgBaseUrl').value = CONFIG.baseUrl;
+  $('#cfgUseGet').value = String(CONFIG.useGet);
+  $('#cfgAuthHeader').value = CONFIG.authHeader;
+  $('#cfgAuthValue').value = CONFIG.authValue;
+  $('#cfgFlows').value = JSON.stringify(CONFIG.flows, null, 2);
+  $('#settingsModal').showModal();
+}
+function saveSettingsFromUI(){
+  CONFIG.baseUrl = $('#cfgBaseUrl').value.trim();
+  CONFIG.useGet = $('#cfgUseGet').value === 'true';
+  CONFIG.authHeader = $('#cfgAuthHeader').value.trim();
+  CONFIG.authValue = $('#cfgAuthValue').value.trim();
+  try { CONFIG.flows = JSON.parse($('#cfgFlows').value) } catch { toast('Invalid JSON in Flow Path Mapping') }
+  saveConfig();
+}
+async function testConnection(){
+  try { await callFlow('listConferences', {}); $('#testResult').textContent = '✅ Connected'; }
+  catch(e){ $('#testResult').textContent = '❌ ' + e.message }
+}
+
+// --- Data loaders ---
+async function loadConferences(){
+  const list = $('#confList');
+  list.innerHTML = '<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>';
+  try {
+    const res = await callFlow('listConferences', {});
+    state.conferences = Array.isArray(res?.items) ? res.items : (Array.isArray(res)?res:[]);
+  } catch(err){ toast(`<strong>Load failed:</strong> ${err.message}`); state.conferences = [] }
+  renderConferenceList();
+}
+
+function renderConferenceList(){
+  const q = ($('#search').value||'').toLowerCase();
+  const list = $('#confList');
+  const items = (state.conferences||[]) 
+    .filter(c=> !q || [c.name, c.location, c.description].filter(Boolean).join(' ').toLowerCase().includes(q))
+    .sort((a,b)=> new Date(b.startDate||0) - new Date(a.startDate||0));
+  if(!items.length){ list.innerHTML = `<div class="empty">No conferences found</div>`; return }
+  list.innerHTML = '';
+  for(const c of items){
+    const node = document.createElement('div'); node.className='item'; node.tabIndex=0; node.role='button';
+    const dateStr = [fmtDate(c.startDate), fmtDate(c.endDate)].filter(Boolean).join(' – ');
+    node.innerHTML = `<div><div class="title">${c.name||'Untitled'}</div>
+      <div class="meta">${dateStr}${c.location?` · ${c.location}`:''}</div></div>
+      <div class="badge">${(c.tags||[]).slice(0,3).join(', ')}</div>`;
+    node.addEventListener('click', ()=> selectConference(c.id||c.conferenceId||c._id));
+    list.appendChild(node);
+  }
+}
+
+async function selectConference(id){
+  state.selectedId = id;
+  $('#emptyState').style.display = 'none';
+  $('#detailWrap').style.display = '';
+  $('#selectedMeta').textContent = 'Loading…';
+  $('#vendorList').innerHTML = '<div class="skeleton"></div><div class="skeleton"></div>';
+  $('#sessionList').innerHTML = '<div class="skeleton"></div><div class="skeleton"></div>';
+
+  try {
+    const [conf, vendors, sessions, vStats, sStats] = await Promise.all([
+      callFlow('getConference', { conferenceId: id }),
+      callFlow('vendorsByConference', { conferenceId: id }),
+      callFlow('sessionsByConference', { conferenceId: id }),
+      callFlow('vendorStats', { conferenceId: id }),
+      callFlow('sessionStats', { conferenceId: id })
+    ]);
+    renderDetails(conf, vendors, sessions, vStats, sStats);
+  } catch(err){ toast(`<strong>Load failed:</strong> ${err.message}`) }
+}
+
+function renderDetails(conf, vendors, sessions, vStats, sStats){
+  const c = conf?.item || conf || {};
+  const vs = Array.isArray(vendors?.items)?vendors.items:(vendors||[]);
+  const ss = Array.isArray(sessions?.items)?sessions.items:(sessions||[]);
+
+  $('#confTitle').textContent = c.name || 'Untitled';
+  $('#confMeta').textContent = `${fmtDate(c.startDate)} – ${fmtDate(c.endDate)}${c.location?` · ${c.location}`:''}${c.timezone?` · ${c.timezone}`:''}`;
+  $('#confDesc').textContent = c.description || '';
+  $('#selectedMeta').textContent = c.id || c.conferenceId || '';
+
+  // Metrics
+  const totalAttendees = sStats?.totals?.attendees ?? c.attendees ?? null;
+  const avgRating = (sStats?.totals?.avgRating ?? c.avgRating ?? null);
+  $('#mAttendees').textContent = fmtNum(totalAttendees);
+  $('#mAvgRating').textContent = avgRating? Number(avgRating).toFixed(2) : '—';
+  $('#mVendors').textContent = fmtNum(vs.length);
+  $('#mSessions').textContent = fmtNum(ss.length);
+  $('#ovrUpdated').textContent = c.updatedAt ? `Updated ${fmtDate(c.updatedAt)}` : '';
+
+  // Vendors
+  state.selectedVendorIds.clear();
+  const vList = $('#vendorList'); vList.innerHTML = '';
+  if(!vs.length) vList.innerHTML = '<div class="empty">No vendors</div>';
+  for(const v of vs){
+    const leads = (vStats?.byVendor?.[v.id||v.vendorId]?.leads) ?? v.leads;
+    const sessionsHosted = (vStats?.byVendor?.[v.id||v.vendorId]?.sessions) ?? v.sessionsHosted;
+    const node = document.createElement('div'); node.className='item';
+    node.innerHTML = `<div><div class="title">${v.name||'Vendor'}</div>
+      <div class="meta">Leads: ${fmtNum(leads)} · Sessions: ${fmtNum(sessionsHosted)}${v.booth?` · Booth ${v.booth}`:''}</div></div>
+      <label class="badge"><input type="checkbox" data-vid="${v.id||v.vendorId}" /> Select</label>`;
+    node.querySelector('input').addEventListener('change', (e)=>{
+      const id = e.target.dataset.vid; if(e.target.checked) state.selectedVendorIds.add(id); else state.selectedVendorIds.delete(id);
+    });
+    vList.appendChild(node);
+  }
+
+  // Sessions
+  state.selectedSessionIds.clear();
+  const sList = $('#sessionList'); sList.innerHTML = '';
+  if(!ss.length) sList.innerHTML = '<div class="empty">No sessions</div>';
+  for(const s of ss){
+    const stats = sStats?.bySession?.[s.id||s.sessionId] || {};
+    const node = document.createElement('div'); node.className='item';
+    node.innerHTML = `<div><div class="title">${s.title||'Session'}</div>
+      <div class="meta">${fmtDate(s.start)}${s.speaker?` · ${s.speaker}`:''} · Attendees: ${fmtNum(stats.attendees ?? s.attendees)} · Rating: ${(stats.avgRating??s.avgRating??'–')}</div></div>
+      <label class="badge"><input type="checkbox" data-sid="${s.id||s.sessionId}" /> Select</label>`;
+    node.querySelector('input').addEventListener('change', (e)=>{
+      const id = e.target.dataset.sid; if(e.target.checked) state.selectedSessionIds.add(id); else state.selectedSessionIds.delete(id);
+    });
+    sList.appendChild(node);
+  }
+
+  // Chart: sessions by day
+  try {
+    const byDay = aggregateByDay(ss);
+    renderSessionsByDayChart(byDay);
+  } catch(e){ console.warn('Chart error', e) }
+}
+
+function aggregateByDay(sessions){
+  const map = new Map();
+  for(const s of sessions){ const d = new Date(s.start||s.date); const key = d.toISOString().slice(0,10); map.set(key, (map.get(key)||0)+1); }
+  const rows = Array.from(map.entries()).sort(([a],[b])=> a.localeCompare(b));
+  return { labels: rows.map(r=> r[0]), values: rows.map(r=> r[1]) };
+}
+
+function renderSessionsByDayChart(data){
+  const ctx = document.getElementById('chartSessionsByDay');
+  if(state.charts.sessionsByDay){ state.charts.sessionsByDay.destroy(); }
+  if(!data.labels.length){ ctx.replaceWith(ctx.cloneNode()); return }
+  state.charts.sessionsByDay = new Chart(ctx, {
+    type: 'line',
+    data: { labels: data.labels, datasets: [{ label: 'Sessions', data: data.values, tension: .3, fill: false }] },
+    options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#8a93a6' } }, y: { ticks: { color: '#8a93a6' } } } }
+  });
+}
+
+// --- Reports ---
+async function generateEOD(){
+  const id = state.selectedId; if(!id) return toast('Select a conference first');
+  const date = ($('#eodDate').value || undefined);
+  try {
+    const res = await callFlow('reportEOD', { conferenceId: id, date });
+    await handleReportResponse(res, `EOD-${id}-${date||Date.now()}`);
+  } catch(e){ toast(`<strong>Report failed:</strong> ${e.message}`) }
+}
+async function generateEOC(){
+  const id = state.selectedId; if(!id) return toast('Select a conference first');
+  try {
+    const res = await callFlow('reportEOC', { conferenceId: id });
+    await handleReportResponse(res, `EOC-${id}`);
+  } catch(e){ toast(`<strong>Report failed:</strong> ${e.message}`) }
+}
+async function generateVendorReport(){
+  const id = state.selectedId; if(!id) return toast('Select a conference first');
+  const vendorIds = Array.from(state.selectedVendorIds);
+  if(!vendorIds.length) return toast('Select at least one vendor');
+  try {
+    const res = await callFlow('reportVendor', { conferenceId: id, vendorIds });
+    await handleReportResponse(res, `Vendors-${id}`);
+  } catch(e){ toast(`<strong>Report failed:</strong> ${e.message}`) }
+}
+async function generateSessionReport(){
+  const id = state.selectedId; if(!id) return toast('Select a conference first');
+  const sessionIds = Array.from(state.selectedSessionIds);
+  if(!sessionIds.length) return toast('Select at least one session');
+  try {
+    const res = await callFlow('reportSession', { conferenceId: id, sessionIds });
+    await handleReportResponse(res, `Sessions-${id}`);
+  } catch(e){ toast(`<strong>Report failed:</strong> ${e.message}`) }
+}
+
+async function handleReportResponse(res, fallbackName){
+  // 1) JSON shape with fileUrl
+  if(res?.fileUrl){ window.open(res.fileUrl, '_blank'); toast('Download started'); return }
+  // 2) JSON with base64 content
+  if(res?.fileBase64){ const blob = base64ToBlob(res.fileBase64, res?.contentType||'application/octet-stream'); triggerDownloadFromBlob(blob, res?.fileName || (fallbackName+guessExt(res?.contentType))); toast('Downloaded'); return }
+  // 3) Direct blob response
+  if(res?.__blob){ triggerDownloadFromBlob(res.__blob, res.__filename || (fallbackName+guessExt(res?.contentType))); toast('Downloaded'); return }
+  toast('Report generated — check your inbox or storage target');
+}
+function guessExt(ct){ if(!ct) return ''; const map={ 'application/pdf': '.pdf','text/csv':'.csv','application/zip':'.zip' }; return map[ct]||'' }
+function base64ToBlob(b64, type){ const bin = atob(b64); const len = bin.length; const arr = new Uint8Array(len); for(let i=0;i<len;i++) arr[i] = bin.charCodeAt(i); return new Blob([arr], { type }) }
+
+// --- Boot ---
+async function refreshAll(){ await loadConferences(); }
+(function init(){ refreshAll(); })();
+</script></body>
+          </html>
