@@ -165,4 +165,305 @@
           <div class="list" id="vendorList"></div>
         </div>
 
-        <div id="tab-sessions" role="tabpane
+        <div id="tab-sessions" role="tabpanel" class="section" hidden>
+          <div class="row" style="justify-content: space-between;">
+            <strong>Sessions</strong>
+          </div>
+          <div class="list" id="sessionList"></div>
+        </div>
+
+        <div id="tab-reports" role="tabpanel" class="section" hidden>
+          <div class="two">
+            <div class="card section">
+              <div class="row" style="justify-content:space-between;"><strong>End of Day</strong><input type="date" id="eodDate" /></div>
+              <button id="eodBtn2" class="btn">Generate EOD (PDF)</button>
+              <div id="eodStatus" class="muted" style="margin-top:8px"></div>
+            </div>
+            <div class="card section">
+              <strong>End of Conference</strong>
+              <button id="eocBtn2" class="btn">Generate EOC (PDF)</button>
+              <div id="eocStatus" class="muted" style="margin-top:8px"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="toasts"></div>
+
+<!-- Debug Drawer -->
+<button class="btn debug-toggle" id="debugToggle">🐞 Debug</button>
+<div class="debug-drawer" id="debugDrawer">
+  <div class="debug-card">
+    <div class="debug-head">
+      <strong>Debug log</strong>
+      <div class="row">
+        <button class="btn" id="dbgPause">Pause</button>
+        <button class="btn" id="dbgCopy">Copy</button>
+        <button class="btn" id="dbgClear">Clear</button>
+        <button class="btn" id="dbgClose">Close</button>
+      </div>
+    </div>
+    <div id="debugBody" class="debug-body" aria-live="polite"></div>
+  </div>
+</div>
+
+<script>
+/* ==== SETTINGS (read-only here; edit on homepage) ==== */
+const DEFAULT_ENDPOINTS = { conference:'/conference', company:'/company', session:'/session', report:'/report' };
+function getSettings(){
+  try {
+    const s = JSON.parse(localStorage.getItem('cb.settings')) || {};
+    return { baseUrl: s.baseUrl||'', useGet: !!s.useGet, authHeader: s.authHeader||'', authValue: s.authValue||'', mapping: s.mapping||{} };
+  } catch { return { baseUrl:'', useGet:false, authHeader:'', authValue:'', mapping:{} } }
+}
+
+/* ==== UTILITIES ==== */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+function toast(msg){ const n=document.createElement('div'); n.className='toast'; n.innerHTML=msg; $('#toasts').appendChild(n); setTimeout(()=>n.remove(), 4000); }
+function fmtDate(d){ if(!d) return '—'; const dt = new Date(d); return isFinite(dt) ? dt.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'2-digit'}) : d; }
+function uuid(){ return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c=>{ const r=Math.random()*16|0, v=c==='x'?r:(r&0x3|0x8); return v.toString(16); }); }
+
+const Debug = { paused:false, add(level,msg,data){ const b=$('#debugBody'); const line=document.createElement('div'); line.className='logline'; const ts=new Date().toLocaleTimeString([], {hour12:false}); line.innerHTML=`<span class="mono">${ts}</span><span class="mono">${level.toUpperCase()}</span><span>${escapeHtml(msg)}${data?` — <span class="mono">${escapeHtml(JSON.stringify(data))}</span>`:''}</span>`; b.appendChild(line); if(!Debug.paused){ b.scrollTop = b.scrollHeight } } };
+function logI(m,d){ Debug.add('info',m,d) } function logS(m,d){ Debug.add('success',m,d) } function logE(m,d){ Debug.add('error',m,d) }
+function escapeHtml(s){ return s?.replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) }
+
+/* ==== STRICT-SPEC FETCH HELPERS ==== */
+function paths(){ const cfg=getSettings(); const map=cfg.mapping||{}; return {
+  conference: map.conference || DEFAULT_ENDPOINTS.conference,
+  company: map.company || DEFAULT_ENDPOINTS.company,
+  session: map.session || DEFAULT_ENDPOINTS.session,
+  report: map.report || DEFAULT_ENDPOINTS.report,
+  baseUrl: cfg.baseUrl, authHeader: cfg.authHeader, authValue: cfg.authValue
+};}
+
+function buildHeaders(){ const h={'Accept':'application/json','Content-Type':'application/json'}; const cfg=getSettings(); if(cfg.authHeader && cfg.authValue){ h[cfg.authHeader]=cfg.authValue } return h; }
+
+/* GET with query params only (no bodies) */
+async function GET(path, params={}){
+  const p = paths(); if(!p.baseUrl) throw new Error('Base URL not set');
+  const url = p.baseUrl + path + (Object.keys(params).length? ('?'+new URLSearchParams(params)) : '');
+  logI('GET ' + path, params);
+  const res = await fetch(url, { headers: buildHeaders() });
+  if(!res.ok){ const t=await res.text().catch(()=>'(no body)'); logE('HTTP '+res.status+' '+path, {body:t.slice(0,200)}); throw new Error('HTTP '+res.status) }
+  const json = await res.json();
+  logS('OK ' + path);
+  return json;
+}
+
+/* POST/PUT must include api_version + request_id in body */
+async function SEND(method, path, payload){
+  const p = paths(); if(!p.baseUrl) throw new Error('Base URL not set');
+  const body = { api_version: '1.0', request_id: uuid(), ...payload };
+  logI(method+' '+path, body);
+  const res = await fetch(p.baseUrl + path, { method, headers: buildHeaders(), body: JSON.stringify(body) });
+  if(!res.ok){ const t=await res.text().catch(()=>'(no body)'); logE('HTTP '+res.status+' '+path, {body:t.slice(0,200)}); throw new Error('HTTP '+res.status) }
+  const json = await res.json();
+  logS('OK ' + path);
+  return json;
+}
+
+/* ==== STATE ==== */
+let state = { list: [], selectedId: null, vendors: [], sessions: [], chart: null };
+
+/* ==== UI EVENTS ==== */
+$('#debugToggle').addEventListener('click', ()=> $('#debugDrawer').toggleAttribute('open'));
+$('#dbgClose').addEventListener('click', ()=> $('#debugDrawer').removeAttribute('open'));
+$('#dbgClear').addEventListener('click', ()=> $('#debugBody').innerHTML='');
+$('#dbgCopy').addEventListener('click', async ()=>{ const text = Array.from($('#debugBody').querySelectorAll('.logline')).map(n=>n.textContent).join('\n'); try{ await navigator.clipboard.writeText(text); toast('Copied'); }catch{} });
+$('#dbgPause').addEventListener('click', (e)=>{ Debug.paused=!Debug.paused; e.target.textContent = Debug.paused? 'Resume':'Pause' });
+
+$('#refreshBtn').addEventListener('click', refreshAll);
+$('#search').addEventListener('input', renderList);
+
+$$('.tab').forEach(btn => btn.addEventListener('click', ()=>{
+  $$('.tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const name = btn.dataset.tab;
+  ['overview','vendors','sessions','reports'].forEach(t => { $('#tab-'+t).hidden = (t!==name) });
+}));
+
+/* Create conference (POST /conference) */
+$('#createForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const form = new FormData(e.target);
+  const name = form.get('name')?.trim();
+  const start_date = form.get('start_date');
+  const end_date = form.get('end_date');
+  const location = form.get('location')?.trim() || null;
+  const website_url = form.get('website_url')?.trim() || null;
+  const goals_text = form.get('goals_text') || form.get('goals_text') || $('#cAims').value || null;
+
+  if(!name || !start_date || !end_date){ toast('<strong>Missing required fields</strong>'); return; }
+
+  const id = slugId(name, start_date); // client-stable id
+  try{
+    const payload = {
+      conference: { id, name, start_date, end_date, location, website_url, goals_text: goals_text || null }
+    };
+    const res = await SEND('POST', paths().conference, payload);
+    toast('Conference created');
+    e.target.reset();
+    await loadConferences();
+    selectConference(id);
+  } catch(err){ toast('Create failed: ' + err.message); }
+});
+
+function slugId(name, startDate){
+  const slug = name.toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'').slice(0,40);
+  return `conf_${startDate}_${slug||'new'}`;
+}
+
+/* ==== LOADERS ==== */
+async function loadConferences(){
+  const p = paths();
+  // GET /conference (list). We support optional filters; here: limit 50.
+  const res = await GET(p.conference, { limit: 50 });
+  const items = Array.isArray(res?.conferences) ? res.conferences : [];
+  state.list = items;
+  renderList();
+}
+
+function renderList(){
+  const q = ($('#search').value||'').toLowerCase();
+  const listNode = $('#confList'); listNode.innerHTML = '';
+  const items = (state.list||[])
+    .filter(c => !q || (c.name||'').toLowerCase().includes(q) || (c.location||'').toLowerCase().includes(q))
+    .sort((a,b)=> (new Date(b.date_range?.[0]||0)) - (new Date(a.date_range?.[0]||0)));
+  if(!items.length){ listNode.innerHTML = '<div class="empty">No conferences found</div>'; return }
+  for(const c of items){
+    const el = document.createElement('div'); el.className = 'item';
+    const dr = Array.isArray(c.date_range) ? `${fmtDate(c.date_range[0])} – ${fmtDate(c.date_range[1])}` : '—';
+    el.innerHTML = `<div><div class="title">${c.name}</div><div class="meta">${dr}${c.location?` · ${c.location}`:''}</div></div><div class="badge">${c.exhibitors_count ?? 0} vendors</div>`;
+    el.addEventListener('click', ()=> selectConference(c.id));
+    listNode.appendChild(el);
+  }
+}
+
+async function selectConference(id){
+  state.selectedId = id;
+  $('#emptyState').style.display = 'none';
+  $('#detailWrap').style.display = 'grid';
+  $('#vendorList').innerHTML = '<div class="empty">Loading vendors…</div>';
+  $('#sessionList').innerHTML = '<div class="empty">Loading sessions…</div>';
+
+  try{
+    const p = paths();
+    const confRes = await GET(p.conference, { id });
+    const c = confRes?.conference || {};
+    $('#confTitle').textContent = c.name || id;
+    const dr = Array.isArray(c.date_range) ? `${fmtDate(c.date_range[0])} – ${fmtDate(c.date_range[1])}` : '';
+    $('#confMeta').textContent = [dr, c.location].filter(Boolean).join(' · ');
+    $('#confAims').textContent = c.goals_text ? `Aims: ${c.goals_text}` : '';
+
+    $('#selectedMeta').textContent = c.id || id;
+
+    // Parallel: vendors & sessions
+    const [vRes, sRes] = await Promise.all([
+      GET(p.company, { conference_id: id, limit: 200 }),
+      GET(p.session, { conference_id: id, limit: 200 })
+    ]);
+
+    const vendors = Array.isArray(vRes?.companies) ? vRes.companies : [];
+    const sessions = Array.isArray(sRes?.sessions) ? sRes.sessions : [];
+    state.vendors = vendors; state.sessions = sessions;
+
+    $('#mVendors').textContent = vendors.length;
+    $('#mSessions').textContent = sessions.length;
+
+    renderVendors(vendors);
+    renderSessions(sessions);
+    renderSessionsByDayChart(sessions);
+
+  } catch(err){ toast('Load failed: ' + err.message); }
+}
+
+function renderVendors(vendors){
+  const list = $('#vendorList'); list.innerHTML = '';
+  if(!vendors.length){ list.innerHTML = '<div class="empty">No vendors</div>'; return; }
+  for(const v of vendors){
+    const el = document.createElement('div'); el.className='item';
+    el.innerHTML = `<div><div class="title">${v.name}</div><div class="meta">${v.booth?('Booth '+v.booth+' · '):''}${(v.tags||[]).join(', ')}</div></div><div class="badge">${v.sentiment!=null?('SNT '+v.sentiment.toFixed(2)):'—'}</div>`;
+    list.appendChild(el);
+  }
+}
+
+function renderSessions(sessions){
+  const list = $('#sessionList'); list.innerHTML = '';
+  if(!sessions.length){ list.innerHTML = '<div class="empty">No sessions</div>'; return; }
+  for(const s of sessions){
+    const el = document.createElement('div'); el.className='item';
+    el.innerHTML = `<div><div class="title">${s.summary||('Session '+s.id)}</div><div class="meta">${fmtDate(s.started_at)}${s.company_id?(' · company '+s.company_id):''}${s.state?(' · '+s.state):''}</div></div>`;
+    list.appendChild(el);
+  }
+}
+
+/* Chart: Sessions/day */
+function renderSessionsByDayChart(sessions){
+  const ctx = document.getElementById('chartSessionsByDay');
+  if(state.chart){ state.chart.destroy(); state.chart = null; }
+  const map = new Map();
+  for(const s of sessions||[]){ const d = (s.started_at||'').slice(0,10); if(d) map.set(d, (map.get(d)||0)+1); }
+  const labels = Array.from(map.keys()).sort();
+  const values = labels.map(d => map.get(d));
+  state.chart = new Chart(ctx, { type:'line', data:{ labels, datasets:[{ label:'Sessions', data: values, tension:.3, fill:false }] }, options:{ plugins:{ legend:{ display:false } } } });
+}
+
+/* ==== REPORTS (strict spec) ==== */
+/* POST /report then poll GET /report?job_id=... until ready, then fetch GET /report?id=...&format=pdf */
+async function generateReport({ type, date }){
+  const p = paths();
+  const conference_id = state.selectedId;
+  if(!conference_id){ toast('Select a conference first'); return; }
+  const reportId = `${conference_id}_${type}_${date||'all'}`;
+  const payload = { report: { id: reportId, conference_id, type, date: (type==='daily'? date : undefined), format: 'pdf', options: {} } };
+  const post = await SEND('POST', p.report, payload);
+  if(post?.status!=='accepted'){ toast('Unexpected response'); }
+  const jobId = post?.job_id;
+  if(!jobId){ toast('No job id returned'); return; }
+  const statusNode = (type==='daily') ? $('#eodStatus') : $('#eocStatus');
+  statusNode.textContent = 'Job queued…';
+
+  // poll
+  let tries = 0;
+  while(tries < 20){
+    await sleep(1500);
+    const stat = await GET(p.report, { job_id: jobId });
+    const st = stat?.report?.status;
+    statusNode.textContent = 'Status: ' + st;
+    if(st === 'ready'){
+      const rep = await GET(p.report, { id: reportId, format: 'pdf' });
+      // If the backend includes a direct download_url in this response, open it.
+      const maybeUrl = rep?.report?.download_url;
+      if(maybeUrl){ window.open(maybeUrl, '_blank'); toast('Download started'); }
+      else {
+        // Otherwise show artifact/data file ids so the user can fetch via your n8n file endpoint.
+        const artifact = rep?.report?.artifact_file_id || '(no artifact_file_id)';
+        const datafile = rep?.report?.data_file_id || '(no data_file_id)';
+        statusNode.textContent = `Ready (artifact: ${artifact}, data: ${datafile})`;
+        toast('Report ready');
+      }
+      return;
+    }
+    if(st === 'error'){ toast('Report error'); return; }
+    tries++;
+  }
+  toast('Report still processing; try again later.');
+}
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)) }
+
+$('#eodBtn').addEventListener('click', ()=> { const d=$('#eodDate').value; if(!d) { toast('Pick a date'); return; } generateReport({ type:'daily', date:d }) });
+$('#eodBtn2').addEventListener('click', ()=> { const d=$('#eodDate').value; if(!d) { toast('Pick a date'); return; } generateReport({ type:'daily', date:d }) });
+$('#eocBtn').addEventListener('click', ()=> generateReport({ type:'conference' }));
+$('#eocBtn2').addEventListener('click', ()=> generateReport({ type:'conference' }));
+
+/* ==== BOOT ==== */
+async function refreshAll(){ try{ await loadConferences(); } catch(e){ toast('Load error: '+e.message) } }
+(function init(){ refreshAll(); })();
+</script>
+</body>
+</html>
