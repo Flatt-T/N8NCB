@@ -1,5 +1,4 @@
 <!doctype html>
-
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -53,68 +52,79 @@
     .btn:hover { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(124,92,255,.12) }
     .btn.primary { background: linear-gradient(180deg, var(--primary), var(--primary-600)); border: none }
     .btn.ghost { background: transparent }
-    .icon { width: 20px; height: 20px; display: inline-grid; place-items: center }main { max-width: 1200px; margin: 16px auto; padding: 0 16px; }
-.grid { display: grid; grid-template-columns: 1fr; gap: 16px }
-@media (min-width: 980px) {
-  .grid { grid-template-columns: 360px 1fr }
-}
-.card { background: linear-gradient(180deg, rgba(18,22,35,.98), rgba(18,22,35,.9)); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow) }
-.card h3 { margin: 0 0 8px; font-size: 18px }
-.card .p { color: var(--muted); font-size: 14px }
-.section { padding: 16px }
-.divider { height: 1px; background: var(--border); margin: 12px 0 }
+    .icon { width: 20px; height: 20px; display: inline-grid; place-items: center }
 
-.field { display: grid; gap: 6px; margin-bottom: 12px }
-label { font-size: 13px; color: var(--muted) }
-input, textarea, select { width: 100%; background: #0b0f1a; color: var(--text); border: 1px solid var(--ring); border-radius: 12px; padding: 10px 12px; outline: none; transition: .2s; }
-input:focus, textarea:focus, select:focus{ border-color: var(--primary); box-shadow: 0 0 0 4px rgba(124,92,255,.12) }
-textarea { min-height: 72px; resize: vertical }
+    main { max-width: 1200px; margin: 16px auto; padding: 0 16px; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 16px }
+    @media (min-width: 980px) {
+      .grid { grid-template-columns: 360px 1fr }
+    }
+    .card { background: linear-gradient(180deg, rgba(18,22,35,.98), rgba(18,22,35,.9)); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow) }
+    .card h3 { margin: 0 0 8px; font-size: 18px }
+    .card .p { color: var(--muted); font-size: 14px }
+    .section { padding: 16px }
+    .divider { height: 1px; background: var(--border); margin: 12px 0 }
 
-.list { display: flex; flex-direction: column; gap: 8px; }
-.item { border: 1px solid var(--ring); background: #0c101b; border-radius: 12px; padding: 10px; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; cursor: pointer }
-.item:hover { border-color: var(--primary) }
-.item .title { font-weight: 600 }
-.item .meta { font-size: 12px; color: var(--muted) }
-.item .badge { background: #141a2a; border: 1px solid var(--ring); padding: 2px 8px; border-radius: 999px; font-size: 12px; color: var(--muted) }
+    .field { display: grid; gap: 6px; margin-bottom: 12px }
+    label { font-size: 13px; color: var(--muted) }
+    input, textarea, select { width: 100%; background: #0b0f1a; color: var(--text); border: 1px solid var(--ring); border-radius: 12px; padding: 10px 12px; outline: none; transition: .2s; }
+    input:focus, textarea:focus, select:focus{ border-color: var(--primary); box-shadow: 0 0 0 4px rgba(124,92,255,.12) }
+    textarea { min-height: 72px; resize: vertical }
 
-.toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap }
-.toolbar .grow { flex: 1 }
+    .list { display: flex; flex-direction: column; gap: 8px; }
+    .item { border: 1px solid var(--ring); background: #0c101b; border-radius: 12px; padding: 10px; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; cursor: pointer }
+    .item:hover { border-color: var(--primary) }
+    .item .title { font-weight: 600 }
+    .item .meta { font-size: 12px; color: var(--muted) }
+    .item .badge { background: #141a2a; border: 1px solid var(--ring); padding: 2px 8px; border-radius: 999px; font-size: 12px; color: var(--muted) }
 
-.stack { display: grid; gap: 12px }
-.two { display: grid; gap: 12px; grid-template-columns: 1fr; }
-@media (min-width: 720px) { .two { grid-template-columns: 1fr 1fr } }
+    .toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap }
+    .toolbar .grow { flex: 1 }
 
-.detail { display: grid; gap: 12px }
-.row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap }
+    .stack { display: grid; gap: 12px }
+    .two { display: grid; gap: 12px; grid-template-columns: 1fr; }
+    @media (min-width: 720px) { .two { grid-template-columns: 1fr 1fr } }
 
-.tag { display: inline-block; padding: 4px 8px; border: 1px solid var(--ring); border-radius: 999px; font-size: 12px; color: var(--muted) }
+    .detail { display: grid; gap: 12px }
+    .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap }
 
-.pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--ring); border-radius: 12px; color: var(--muted) }
+    .tag { display: inline-block; padding: 4px 8px; border: 1px solid var(--ring); border-radius: 999px; font-size: 12px; color: var(--muted) }
 
-.empty { text-align: center; color: var(--muted); padding: 24px }
+    .pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--ring); border-radius: 12px; color: var(--muted) }
 
-.skeleton { position: relative; overflow: hidden; background: #111524; border: 1px solid var(--ring); border-radius: 12px; height: 56px }
-.skeleton::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,.06), transparent); transform: translateX(-100%); animation: shine 1.2s infinite }
-@keyframes shine { 100% { transform: translateX(100%) } }
+    .empty { text-align: center; color: var(--muted); padding: 24px }
 
-/* Tabs */
-.tabs { display: flex; gap: 6px; flex-wrap: wrap }
-.tab { border: 1px solid var(--ring); padding: 8px 12px; border-radius: 10px; cursor: pointer; color: var(--muted) }
-.tab.active { color: var(--text); border-color: var(--primary) }
+    .skeleton { position: relative; overflow: hidden; background: #111524; border: 1px solid var(--ring); border-radius: 12px; height: 56px }
+    .skeleton::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,.06), transparent); transform: translateX(-100%); animation: shine 1.2s infinite }
+    @keyframes shine { 100% { transform: translateX(100%) } }
 
-/* Toasts */
-#toasts { position: fixed; right: 16px; bottom: 16px; display: grid; gap: 10px; z-index: 50 }
-.toast { background: #0c101b; border: 1px solid var(--ring); border-left: 4px solid var(--primary); border-radius: 12px; padding: 12px 14px; box-shadow: var(--shadow) }
+    /* Tabs */
+    .tabs { display: flex; gap: 6px; flex-wrap: wrap }
+    .tab { border: 1px solid var(--ring); padding: 8px 12px; border-radius: 10px; cursor: pointer; color: var(--muted) }
+    .tab.active { color: var(--text); border-color: var(--primary) }
 
-/* Modal */
-.modal { position: fixed; inset: 0; display: none; place-items: center; background: rgba(0,0,0,.5); z-index: 60 }
-.modal[open] { display: grid }
-.modal-card { width: min(720px, calc(100% - 24px)); background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px }
+    /* Toasts */
+    #toasts { position: fixed; right: 16px; bottom: 16px; display: grid; gap: 10px; z-index: 50 }
+    .toast { background: #0c101b; border: 1px solid var(--ring); border-left: 4px solid var(--primary); border-radius: 12px; padding: 12px 14px; box-shadow: var(--shadow) }
 
-.download-link { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px dashed var(--ring); border-radius: 10px }
-.muted { color: var(--muted) }
-.right { margin-left: auto }
+    /* Debug Drawer */
+    .debug-toggle { position: fixed; right: 16px; bottom: 16px; z-index: 85 }
+    .debug-drawer { position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 90; display: none; }
+    .debug-drawer[open] { display: block }
+    .debug-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); padding: 10px }
+    .debug-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px }
+    .debug-actions { display: flex; gap: 8px; flex-wrap: wrap }
+    .debug-body { background: #0b0f1a; border: 1px solid var(--ring); border-radius: 10px; padding: 8px; max-height: 32vh; overflow: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; line-height: 1.45 }
+    .logline { display: grid; grid-template-columns: 120px 80px 1fr; gap: 8px; padding: 4px 6px; border-bottom: 1px dashed #1c2130 }
+    .logline:last-child { border-bottom: 0 }
+    .lvl-info { color: #8a93a6 }
+    .lvl-success { color: #75f0a6 }
+    .lvl-error { color: #ff7b9c }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace }
 
+    .download-link { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px dashed var(--ring); border-radius: 10px }
+    .muted { color: var(--muted) }
+    .right { margin-left: auto }
   </style>
 </head>
 <body>
@@ -123,17 +133,18 @@ textarea { min-height: 72px; resize: vertical }
     <div class="brand"><span class="logo"></span> conferenceBuddy</div>
     <div class="nav-actions">
       <button class="btn ghost" id="refreshBtn" title="Refresh data">⟳</button>
-      <button class="btn" id="settingsBtn" title="Settings">⚙︎ Settings</button>
       <a class="btn" href="index.html" title="Back to Home">Home</a>
       <a class="btn primary" href="#create" title="Create Conference">+ New</a>
     </div>
   </div>
-</header><main class="grid">
+</header>
+
+<main class="grid">
   <!-- Left rail: Create + List -->
   <section class="card" id="create">
     <div class="section">
       <h3>Create conference</h3>
-      <p class="p">Fill in the details and save. Data is sent to your n8n Flow Endpoint (<code>createConference</code>).</p>
+      <p class="p">Fill in the details and save. Data is sent to your n8n Flow Endpoint (<code>createConference</code>). Settings are now on the <a href="index.html">homepage</a>.</p>
       <form id="createForm" class="stack" autocomplete="off">
         <div class="field"><label for="cName">Name</label><input id="cName" name="name" placeholder="e.g., DevSummit Europe 2026" required /></div>
         <div class="two">
@@ -145,7 +156,8 @@ textarea { min-height: 72px; resize: vertical }
           <div class="field"><label for="cTimezone">Timezone</label><input id="cTimezone" name="timezone" placeholder="Europe/London" /></div>
         </div>
         <div class="field"><label for="cDesc">Description</label><textarea id="cDesc" name="description" placeholder="Short description"></textarea></div>
-        <div class="field"><label for="cTags">Tags (comma‑separated)</label><input id="cTags" name="tags" placeholder="Cloud, AI, Security" /></div>
+        <div class="field"><label for="cAims">Aims of the conference</label><textarea id="cAims" name="aims" placeholder="What are the goals/desired outcomes?"></textarea></div>
+        <div class="field"><label for="cTags">Tags (comma-separated)</label><input id="cTags" name="tags" placeholder="Cloud, AI, Security" /></div>
         <div class="row">
           <button class="btn primary" type="submit">Create</button>
           <button class="btn" type="reset">Reset</button>
@@ -165,7 +177,10 @@ textarea { min-height: 72px; resize: vertical }
         <div class="skeleton"></div>
       </div>
     </div>
-  </section>  <!-- Right: Details -->  <section class="card" id="details">
+  </section>
+
+  <!-- Right: Details -->
+  <section class="card" id="details">
     <div class="section">
       <div class="row">
         <h3 style="margin:0">Details</h3>
@@ -177,8 +192,8 @@ textarea { min-height: 72px; resize: vertical }
           <div class="row" style="justify-content: space-between">
             <div id="confTitle" class="title" style="font-size:20px; font-weight:700"></div>
             <div class="row">
-              <button id="eodBtn" class="btn">End‑of‑Day Report</button>
-              <button id="eocBtn" class="btn">End‑of‑Conference Report</button>
+              <button id="eodBtn" class="btn">End-of-Day Report</button>
+              <button id="eocBtn" class="btn">End-of-Conference Report</button>
             </div>
           </div>
           <div class="p" id="confMeta"></div>
@@ -241,43 +256,33 @@ textarea { min-height: 72px; resize: vertical }
       </div>
     </div>
   </section>
-</main><div id="toasts"></div><!-- Settings Modal --><dialog class="modal" id="settingsModal">
-  <div class="modal-card">
-    <div class="row" style="justify-content: space-between; align-items: start">
-      <div>
-        <h3 style="margin:0">Settings</h3>
-        <p class="p">Configure your n8n Flow Endpoint base URL and auth. These are stored in your browser only.</p>
+</main>
+
+<div id="toasts"></div>
+
+<!-- Debug Drawer -->
+<button class="btn debug-toggle" id="debugToggle">🐞 Debug</button>
+<div class="debug-drawer" id="debugDrawer">
+  <div class="debug-card">
+    <div class="debug-head">
+      <strong>Debug log</strong>
+      <div class="debug-actions">
+        <button class="btn" id="dbgPause">Pause</button>
+        <button class="btn" id="dbgCopy">Copy</button>
+        <button class="btn" id="dbgClear">Clear</button>
+        <button class="btn" id="dbgClose">Close</button>
       </div>
-      <button class="btn" id="closeSettings">✕</button>
     </div>
-    <div class="two" style="margin-top: 8px">
-      <div class="field"><label>n8n Base URL (no trailing slash)</label><input id="cfgBaseUrl" placeholder="https://your-n8n/webhook" /></div>
-      <div class="field"><label>Use GET (instead of POST)</label>
-        <select id="cfgUseGet"><option value="false">POST (default)</option><option value="true">GET</option></select>
-      </div>
-    </div>
-    <div class="two">
-      <div class="field"><label>Auth Header (optional)</label><input id="cfgAuthHeader" placeholder="X-API-Key" /></div>
-      <div class="field"><label>Auth Value (optional)</label><input id="cfgAuthValue" placeholder="abcdef123456" /></div>
-    </div>
-    <div class="field"><label>Flow Path Mapping (JSON)</label>
-      <textarea id="cfgFlows" spellcheck="false" style="min-height: 140px"></textarea>
-      <div class="p">Ensure these align with your <em>n8n API specification</em>. Update to match your deployed flow endpoints.</div>
-    </div>
-    <div class="row">
-      <button class="btn" id="testSettings">Test connection</button>
-      <div id="testResult" class="p"></div>
-      <button class="btn primary right" id="saveSettings">Save</button>
-    </div>
+    <div id="debugBody" class="debug-body" aria-live="polite"></div>
   </div>
-</dialog><script>
+</div>
+
+<script>
 /**
- * conferenceBuddy — Conferences SPA
+ * conferenceBuddy — Conferences SPA (with Debug Drawer)
  *
  * This front-end talks to n8n Flow Endpoints for all data/functions.
- *
- * IMPORTANT: Update the Flow Path Mapping in Settings to match your n8n API spec.
- * Each function here calls `${BASE_URL}${flowPath}` via fetch().
+ * IMPORTANT: Config (base URL, auth, flow paths) now lives in localStorage and is edited on the homepage (index.html).
  */
 
 const DEFAULT_CONFIG = {
@@ -287,16 +292,16 @@ const DEFAULT_CONFIG = {
   authValue: "",
   flows: {
     listConferences: "/conferences/list",
-    getConference: "/conferences/get",           // expects { conferenceId }
-    createConference: "/conferences/create",      // expects { name, startDate, endDate, location, timezone, description, tags }
-    vendorsByConference: "/vendors/by-conference", // expects { conferenceId }
-    sessionsByConference: "/sessions/by-conference", // expects { conferenceId }
-    vendorStats: "/vendors/stats",                // expects { conferenceId }
-    sessionStats: "/sessions/stats",              // expects { conferenceId }
-    reportEOD: "/reports/eod",                    // expects { conferenceId, date }
-    reportEOC: "/reports/eoc",                    // expects { conferenceId }
-    reportVendor: "/reports/vendor",              // expects { conferenceId, vendorIds: [] }
-    reportSession: "/reports/session"             // expects { conferenceId, sessionIds: [] }
+    getConference: "/conferences/get",
+    createConference: "/conferences/create",      // expects { name, startDate, endDate, location, timezone, description, aims, tags }
+    vendorsByConference: "/vendors/by-conference",
+    sessionsByConference: "/sessions/by-conference",
+    vendorStats: "/vendors/stats",
+    sessionStats: "/sessions/stats",
+    reportEOD: "/reports/eod",
+    reportEOC: "/reports/eoc",
+    reportVendor: "/reports/vendor",
+    reportSession: "/reports/session"
   }
 };
 
@@ -314,11 +319,42 @@ function fmtDate(d){ if(!d) return "—"; const dt = (d instanceof Date) ? d : n
 function fmtNum(n){ if(n===undefined||n===null) return "—"; return new Intl.NumberFormat().format(n) }
 function byId(id){ return (x)=> x.id===id }
 
+// --- Debug logger ---
+const Debug = {
+  paused: false,
+  add(level, message, data){
+    const ts = new Date();
+    const body = $('#debugBody');
+    const line = document.createElement('div');
+    line.className = `logline lvl-${level}`;
+    const tsStr = ts.toLocaleTimeString([], {hour12:false});
+    const dataStr = data ? escapeHtml(JSON.stringify(sanitize(data))) : '';
+    line.innerHTML = `<span class="mono">${tsStr}</span><span class="mono">${level.toUpperCase()}</span><span>${escapeHtml(message)}${data?` — <span class=\"mono\">${dataStr}</span>`:''}</span>`;
+    body.appendChild(line);
+    if(!Debug.paused){ body.scrollTop = body.scrollHeight }
+  }
+};
+function logInfo(msg, data){ Debug.add('info', msg, data) }
+function logSuccess(msg, data){ Debug.add('success', msg, data) }
+function logError(msg, data){ Debug.add('error', msg, data) }
+function escapeHtml(s){ return s?.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])) }
+function sanitize(obj){ try { const clone = JSON.parse(JSON.stringify(obj||{})); if(clone.authValue) clone.authValue = '***'; return clone } catch { return obj } }
+
+// Debug UI controls
+$('#debugToggle').addEventListener('click', ()=> { $('#debugDrawer').toggleAttribute('open'); });
+$('#dbgClose').addEventListener('click', ()=> { $('#debugDrawer').removeAttribute('open'); });
+$('#dbgClear').addEventListener('click', ()=> { $('#debugBody').innerHTML = ''; });
+$('#dbgCopy').addEventListener('click', async ()=>{
+  let text = Array.from($('#debugBody').querySelectorAll('.logline')).map(n=> n.textContent).join('\n');
+  try { await navigator.clipboard.writeText(text); toast('Copied debug log'); } catch { toast('Copy failed') }
+});
+$('#dbgPause').addEventListener('click', (e)=>{ Debug.paused = !Debug.paused; e.target.textContent = Debug.paused? 'Resume' : 'Pause'; });
+
 // n8n fetch wrapper
 async function callFlow(key, payload={}){
   const base = CONFIG.baseUrl?.trim();
   const path = CONFIG.flows[key];
-  if(!base || !path){ throw new Error(`Missing baseUrl or flow path for ${key}`) }
+  if(!base || !path){ const err = `Missing baseUrl or flow path for ${key}`; logError(err); throw new Error(err) }
   const url = base + path;
   const headers = { 'Content-Type': 'application/json' };
   if(CONFIG.authHeader && CONFIG.authValue){ headers[CONFIG.authHeader] = CONFIG.authValue }
@@ -330,21 +366,25 @@ async function callFlow(key, payload={}){
     ? url + '?' + new URLSearchParams(payload).toString()
     : url;
 
-  const res = await fetch(finalUrl, init);
+  const started = performance.now();
+  logInfo(`→ ${key} ${init.method} ${path}`, { payload: payload });
+  const res = await fetch(finalUrl, init).catch(e=>{ throw new Error('Network error: '+e.message) });
+  const ms = Math.round(performance.now()-started);
   if(!res.ok){
     let text = await res.text().catch(()=>"(no body)");
+    logError(`✖ ${key} ${res.status} ${res.statusText} (${ms}ms)`, { body: text.slice(0,400) });
     throw new Error(`Flow ${key} failed: ${res.status} ${res.statusText} — ${text}`)
   }
   const contentType = res.headers.get('content-type')||'';
+  logSuccess(`✓ ${key} ${res.status} (${ms}ms)`, { contentType });
   if(contentType.includes('application/json')) return res.json();
-  // If file download directly
   const blob = await res.blob();
   return { __blob: blob, __filename: filenameFromDisposition(res.headers.get('content-disposition')) };
 }
 
 function filenameFromDisposition(dispo){
   if(!dispo) return undefined;
-  const m = /filename\*=UTF-8''([^;]+)|filename="?([^";]+)"?/i.exec(dispo);
+  const m = /filename\*=UTF-8''([^;]+)|filename="?([^\";]+)"?/i.exec(dispo);
   return decodeURIComponent(m?.[1]||m?.[2]||'download');
 }
 
@@ -363,11 +403,7 @@ let state = {
 };
 
 // --- UI Binding ---
-$('#settingsBtn').addEventListener('click', () => openSettings());
-$('#closeSettings').addEventListener('click', () => $('#settingsModal').close());
-$('#saveSettings').addEventListener('click', () => { saveSettingsFromUI(); toast('Settings saved'); $('#settingsModal').close(); refreshAll(); });
-$('#testSettings').addEventListener('click', testConnection);
-$('#refreshBtn').addEventListener('click', refreshAll);
+$('#refreshBtn').addEventListener('click', ()=>{ logInfo('Refresh requested'); refreshAll(); });
 
 $('#createForm').addEventListener('submit', async (e)=>{
   e.preventDefault();
@@ -376,10 +412,11 @@ $('#createForm').addEventListener('submit', async (e)=>{
   try {
     const out = await callFlow('createConference', data);
     toast('Conference created');
+    logSuccess('Conference created', out);
     e.target.reset();
     await loadConferences();
     if(out?.id){ selectConference(out.id) }
-  } catch(err){ toast(`<strong>Error:</strong> ${err.message}`) }
+  } catch(err){ logError('Create failed', { message: err.message }); toast(`<strong>Error:</strong> ${err.message}`) }
 });
 
 $('#search').addEventListener('input', renderConferenceList);
@@ -391,6 +428,7 @@ $$('.tab').forEach(btn=> btn.addEventListener('click', ()=>{
   const name = btn.dataset.tab;
   $$('#detailWrap [role="tabpanel"]').forEach(p=> p.hidden = true);
   $(`#tab-${name}`).hidden = false;
+  logInfo('Tab switched', { tab: name });
 }));
 
 $('#eodBtn').addEventListener('click', ()=> generateEOD());
@@ -400,27 +438,6 @@ $('#eocBtn2').addEventListener('click', ()=> generateEOC());
 $('#vendorReportSelected').addEventListener('click', ()=> generateVendorReport());
 $('#sessionReportSelected').addEventListener('click', ()=> generateSessionReport());
 
-function openSettings(){
-  $('#cfgBaseUrl').value = CONFIG.baseUrl;
-  $('#cfgUseGet').value = String(CONFIG.useGet);
-  $('#cfgAuthHeader').value = CONFIG.authHeader;
-  $('#cfgAuthValue').value = CONFIG.authValue;
-  $('#cfgFlows').value = JSON.stringify(CONFIG.flows, null, 2);
-  $('#settingsModal').showModal();
-}
-function saveSettingsFromUI(){
-  CONFIG.baseUrl = $('#cfgBaseUrl').value.trim();
-  CONFIG.useGet = $('#cfgUseGet').value === 'true';
-  CONFIG.authHeader = $('#cfgAuthHeader').value.trim();
-  CONFIG.authValue = $('#cfgAuthValue').value.trim();
-  try { CONFIG.flows = JSON.parse($('#cfgFlows').value) } catch { toast('Invalid JSON in Flow Path Mapping') }
-  saveConfig();
-}
-async function testConnection(){
-  try { await callFlow('listConferences', {}); $('#testResult').textContent = '✅ Connected'; }
-  catch(e){ $('#testResult').textContent = '❌ ' + e.message }
-}
-
 // --- Data loaders ---
 async function loadConferences(){
   const list = $('#confList');
@@ -428,7 +445,7 @@ async function loadConferences(){
   try {
     const res = await callFlow('listConferences', {});
     state.conferences = Array.isArray(res?.items) ? res.items : (Array.isArray(res)?res:[]);
-  } catch(err){ toast(`<strong>Load failed:</strong> ${err.message}`); state.conferences = [] }
+  } catch(err){ toast(`<strong>Load failed:</strong> ${err.message}`); logError('List failed', { message: err.message }); state.conferences = [] }
   renderConferenceList();
 }
 
@@ -453,6 +470,7 @@ function renderConferenceList(){
 
 async function selectConference(id){
   state.selectedId = id;
+  logInfo('Select conference', { id });
   $('#emptyState').style.display = 'none';
   $('#detailWrap').style.display = '';
   $('#selectedMeta').textContent = 'Loading…';
@@ -468,7 +486,8 @@ async function selectConference(id){
       callFlow('sessionStats', { conferenceId: id })
     ]);
     renderDetails(conf, vendors, sessions, vStats, sStats);
-  } catch(err){ toast(`<strong>Load failed:</strong> ${err.message}`) }
+    logSuccess('Details loaded');
+  } catch(err){ logError('Detail load failed', { message: err.message }); toast(`<strong>Load failed:</strong> ${err.message}`) }
 }
 
 function renderDetails(conf, vendors, sessions, vStats, sStats){
@@ -532,7 +551,7 @@ function renderDetails(conf, vendors, sessions, vStats, sStats){
 
 function aggregateByDay(sessions){
   const map = new Map();
-  for(const s of sessions){ const d = new Date(s.start||s.date); const key = d.toISOString().slice(0,10); map.set(key, (map.get(key)||0)+1); }
+  for(const s of sessions){ const d = new Date(s.start||s.date); if(!isFinite(d)) continue; const key = d.toISOString().slice(0,10); map.set(key, (map.get(key)||0)+1); }
   const rows = Array.from(map.entries()).sort(([a],[b])=> a.localeCompare(b));
   return { labels: rows.map(r=> r[0]), values: rows.map(r=> r[1]) };
 }
@@ -555,14 +574,14 @@ async function generateEOD(){
   try {
     const res = await callFlow('reportEOD', { conferenceId: id, date });
     await handleReportResponse(res, `EOD-${id}-${date||Date.now()}`);
-  } catch(e){ toast(`<strong>Report failed:</strong> ${e.message}`) }
+  } catch(e){ logError('EOD failed', { message: e.message }); toast(`<strong>Report failed:</strong> ${e.message}`) }
 }
 async function generateEOC(){
   const id = state.selectedId; if(!id) return toast('Select a conference first');
   try {
     const res = await callFlow('reportEOC', { conferenceId: id });
     await handleReportResponse(res, `EOC-${id}`);
-  } catch(e){ toast(`<strong>Report failed:</strong> ${e.message}`) }
+  } catch(e){ logError('EOC failed', { message: e.message }); toast(`<strong>Report failed:</strong> ${e.message}`) }
 }
 async function generateVendorReport(){
   const id = state.selectedId; if(!id) return toast('Select a conference first');
@@ -571,7 +590,7 @@ async function generateVendorReport(){
   try {
     const res = await callFlow('reportVendor', { conferenceId: id, vendorIds });
     await handleReportResponse(res, `Vendors-${id}`);
-  } catch(e){ toast(`<strong>Report failed:</strong> ${e.message}`) }
+  } catch(e){ logError('Vendor report failed', { message: e.message }); toast(`<strong>Report failed:</strong> ${e.message}`) }
 }
 async function generateSessionReport(){
   const id = state.selectedId; if(!id) return toast('Select a conference first');
@@ -580,23 +599,24 @@ async function generateSessionReport(){
   try {
     const res = await callFlow('reportSession', { conferenceId: id, sessionIds });
     await handleReportResponse(res, `Sessions-${id}`);
-  } catch(e){ toast(`<strong>Report failed:</strong> ${e.message}`) }
+  } catch(e){ logError('Session report failed', { message: e.message }); toast(`<strong>Report failed:</strong> ${e.message}`) }
 }
 
 async function handleReportResponse(res, fallbackName){
   // 1) JSON shape with fileUrl
-  if(res?.fileUrl){ window.open(res.fileUrl, '_blank'); toast('Download started'); return }
+  if(res?.fileUrl){ window.open(res.fileUrl, '_blank'); toast('Download started'); logSuccess('Report opened via URL', { url: res.fileUrl }); return }
   // 2) JSON with base64 content
-  if(res?.fileBase64){ const blob = base64ToBlob(res.fileBase64, res?.contentType||'application/octet-stream'); triggerDownloadFromBlob(blob, res?.fileName || (fallbackName+guessExt(res?.contentType))); toast('Downloaded'); return }
+  if(res?.fileBase64){ const blob = base64ToBlob(res.fileBase64, res?.contentType||'application/octet-stream'); triggerDownloadFromBlob(blob, res?.fileName || (fallbackName+guessExt(res?.contentType))); toast('Downloaded'); logSuccess('Report downloaded (base64)'); return }
   // 3) Direct blob response
-  if(res?.__blob){ triggerDownloadFromBlob(res.__blob, res.__filename || (fallbackName+guessExt(res?.contentType))); toast('Downloaded'); return }
-  toast('Report generated — check your inbox or storage target');
+  if(res?.__blob){ triggerDownloadFromBlob(res.__blob, res.__filename || (fallbackName+guessExt(res?.contentType))); toast('Downloaded'); logSuccess('Report downloaded (blob)'); return }
+  toast('Report generated — check your inbox or storage target'); logInfo('Report generated without direct download');
 }
 function guessExt(ct){ if(!ct) return ''; const map={ 'application/pdf': '.pdf','text/csv':'.csv','application/zip':'.zip' }; return map[ct]||'' }
 function base64ToBlob(b64, type){ const bin = atob(b64); const len = bin.length; const arr = new Uint8Array(len); for(let i=0;i<len;i++) arr[i] = bin.charCodeAt(i); return new Blob([arr], { type }) }
 
 // --- Boot ---
-async function refreshAll(){ await loadConferences(); }
+async function refreshAll(){ logInfo('Loading conferences'); await loadConferences(); }
 (function init(){ refreshAll(); })();
-</script></body>
-          </html>
+</script>
+</body>
+            </html>
