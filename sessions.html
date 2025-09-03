@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>conferenceBuddy · Sessions</title>
+  <meta name="description" content="Record sessions, capture notes, images, audio, and sync to n8n Flow Endpoints." />
+  <style>
+    :root {
+      --bg: #0b0d12;           /* Deep slate */
+      --panel: #121621;        /* Card */
+      --panel-2: #0f1320;      /* Alt card */
+      --text: #e8eefc;         /* Primary text */
+      --muted: #9aa6bf;        /* Muted text */
+      --primary: #6aa1ff;      /* Accent */
+      --primary-2: #3a7bff;    /* Accent strong */
+      --danger: #ff5d5d;       /* Error */
+      --ok: #2ecc71;           /* Success */
+      --warn: #f1c40f;         /* Warning */
+      --border: #1f2a44;       /* Hairline */
+      --shadow: 0 10px 30px rgba(8,12,20,.45);
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0; font: 16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 10% -10%, #19315644, transparent),
+                  radial-gradient(800px 500px at 90% -20%, #13203544, transparent),
+                  var(--bg);
+      color: var(--text);
+    }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+    header {
+      position: sticky; top: 0; z-index: 20;
+      background: linear-gradient(180deg, rgba(11,13,18,.9) 0, rgba(11,13,18,.6) 100%);
+      backdrop-filter: saturate(140%) blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar { display: flex; align-items: center; gap: 10px; padding: 14px 20px; }
+    .brand { font-weight: 700; letter-spacing: .3px; }
+    .spacer { flex: 1; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+      padding: .6rem .9rem; border-radius: 12px; border: 1px solid var(--border);
+      background: linear-gradient(180deg, #162137, #12192d); color: var(--text);
+      box-shadow: var(--shadow); cursor: pointer; transition: .18s ease transform, .18s ease background, .18s ease border;
+    }
+    .btn:hover { transform: translateY(-1px); border-color: #2a3a66; }
+    .btn:disabled { opacity: .55; cursor: not-allowed; filter: grayscale(.2); }
+    .primary { background: linear-gradient(180deg, var(--primary), var(--primary-2)); border-color: #2f58c8; }
+    .danger { background: linear-gradient(180deg, #ff7070, #ff5656); border-color: #cc4444; }
+    .ghost { background: transparent; border-color: var(--border); }
+
+    .pill { display: inline-block; background: #233255; color: #b8c6e3; border: 1px solid var(--border); padding: .15rem .5rem; border-radius: 999px; font-size: .75rem; }
+    .muted { color: var(--muted); }
+
+    .grid { display: grid; gap: 18px; grid-template-columns: repeat(12, 1fr); }
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+      border: 1px solid var(--border); border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px; position: relative; overflow: hidden;
+    }
+
+    .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .row.stretch > * { flex: 1; min-width: 180px; }
+
+    h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
+    h2 { font-size: 1.1rem; margin: 0 0 .25rem; }
+    h3 { font-size: 1rem; margin: 0 0 .25rem; }
+    label { display: block; font-weight: 600; margin-bottom: 6px; color: #c8d5f3; }
+    input[type="text"], input[type="email"], input[type="tel"], textarea, select {
+      width: 100%; padding: .7rem .8rem; color: var(--text);
+      background: #0d1426; border: 1px solid var(--border); border-radius: 12px;
+      outline: none; box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+    }
+    textarea { min-height: 140px; resize: vertical; }
+
+    .section-title { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+
+    /* Layout */
+    .main-grid { margin-top: 18px; }
+    .col-8 { grid-column: span 8; }
+    .col-4 { grid-column: span 4; }
+    .col-6 { grid-column: span 6; }
+    .col-12 { grid-column: span 12; }
+    @media (max-width: 960px) {
+      .col-8, .col-4, .col-6 { grid-column: span 12; }
+      .topbar .hide-sm { display: none; }
+    }
+
+    .thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 10px; }
+    .thumb { position: relative; border: 1px dashed #2a3a66; border-radius: 12px; overflow: hidden; }
+    .thumb img, .thumb video { display: block; width: 100%; height: 84px; object-fit: cover; }
+    .thumb .x { position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,.5); border: 1px solid #4a5a86; border-radius: 8px; padding: 2px 6px; cursor: pointer; }
+
+    .stat { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; padding: 10px; background: #0f1424; border: 1px solid var(--border); border-radius: 12px; }
+
+    .toast { position: fixed; right: 16px; bottom: 16px; background: #0f1424; border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; box-shadow: var(--shadow); display: none; }
+
+    /* Modal */
+    dialog { border: 1px solid var(--border); border-radius: 16px; background: #0c1324; color: var(--text); box-shadow: var(--shadow); width: min(820px, 96vw); }
+    dialog::backdrop { background: rgba(5,8,14,.6); backdrop-filter: blur(2px); }
+
+    .kpi { font-weight: 700; font-size: 1.2rem; }
+    .badge { background: #223355; border: 1px solid var(--border); padding: .1rem .45rem; border-radius: 999px; font-size: .75rem; }
+    .sep { height: 1px; background: var(--border); margin: 14px 0; }
+    .nowrap { white-space: nowrap; }
+
+    /* Table-lite */
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 10px; border-bottom: 1px solid var(--border); }
+    tr:hover td { background: rgba(255,255,255,.02); }
+
+    /* Footer */
+    footer { margin: 28px 0 12px; color: var(--muted); font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar container">
+      <div class="brand">conferenceBuddy <span class="muted">· Sessions</span></div>
+      <span class="pill hide-sm">n8n Flow Endpoints</span>
+      <div class="spacer"></div>
+      <a class="btn ghost" href="index.html" title="Home">← Home</a>
+      <a class="btn" href="conferences.html" title="Open Conferences">Open Conferences</a>
+      <button class="btn" id="openSettings" title="Settings">⚙︎ Settings</button>
+      <button class="btn ghost" id="openDebug" title="Debug">🐞 Debug</button>
+      <span class="badge" id="pendingCount" title="Pending unsynced sessions" style="display:none"></span>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="grid main-grid">
+      <!-- LEFT: New Session -->
+      <div class="card col-8" id="newSessionCard">
+        <div class="section-title">
+          <h1>New Session</h1>
+          <div class="row">
+            <button class="btn ghost" id="refreshMeta">⟳ Refresh lists</button>
+          </div>
+        </div>
+
+        <div class="grid" style="gap:14px; grid-template-columns: repeat(12, 1fr);">
+          <div class="col-6">
+            <label for="conference">Conference</label>
+            <select id="conference" required></select>
+            <div class="muted" id="confHint" style="margin-top:6px; font-size:.9rem">Auto-selected based on active conferences for today.</div>
+          </div>
+          <div class="col-6">
+            <label for="vendor">Vendor</label>
+            <select id="vendor">
+              <option value="__unknown">Unknown</option>
+            </select>
+            <div class="muted" style="margin-top:6px; font-size:.9rem">If left unknown, will be saved as an auto ID like <code>u-YYYYMMDD-HHmmss</code>.</div>
+          </div>
+
+          <div class="col-6">
+            <label for="contactName">Contact name</label>
+            <input id="contactName" type="text" placeholder="Jane Smith" />
+          </div>
+          <div class="col-6">
+            <label for="contactCompany">Company</label>
+            <input id="contactCompany" type="text" placeholder="Acme Corp" />
+          </div>
+          <div class="col-6">
+            <label for="contactEmail">Email</label>
+            <input id="contactEmail" type="email" placeholder="jane@company.com" />
+          </div>
+          <div class="col-6">
+            <label for="contactPhone">Phone</label>
+            <input id="contactPhone" type="tel" placeholder="+44 7700 900123" />
+          </div>
+
+          <div class="col-12">
+            <label for="notes">Notes</label>
+            <textarea id="notes" placeholder="Discussion summary, interests, follow-ups..." ></textarea>
+          </div>
+
+          <div class="col-12 card" style="background:#0f1424">
+            <div class="row" style="justify-content: space-between;">
+              <div>
+                <h3>Audio</h3>
+                <p class="muted" style="margin:6px 0 0">Record quick voice notes. Saved as <code>webm/ogg</code>.</p>
+              </div>
+              <div class="row">
+                <button class="btn" id="recBtn">● Record</button>
+                <button class="btn ghost" id="playBtn" disabled>▶︎ Play</button>
+                <button class="btn ghost" id="delAudioBtn" disabled>✕ Delete</button>
+              </div>
+            </div>
+            <audio id="audioPreview" preload="metadata" style="width:100%; margin-top:10px" controls></audio>
+            <div class="muted" id="recStatus">Idle.</div>
+          </div>
+
+          <div class="col-12 card" style="background:#0f1424">
+            <div class="row" style="justify-content: space-between;">
+              <div>
+                <h3>Images</h3>
+                <p class="muted" style="margin:6px 0 0">Capture booth photos, business cards, or whiteboards.</p>
+              </div>
+              <div class="row">
+                <label class="btn" for="imgInput">＋ Add images</label>
+                <input id="imgInput" type="file" accept="image/*" capture="environment" multiple style="display:none" />
+              </div>
+            </div>
+            <div class="thumbs" id="thumbs"></div>
+          </div>
+
+          <div class="col-12">
+            <div class="row" style="justify-content: flex-end;">
+              <button class="btn" id="saveBtn">💾 Save session</button>
+              <button class="btn ghost" id="saveLocalBtn" title="Save locally only">💾 Save (local)</button>
+              <button class="btn ghost" id="clearBtn">Clear</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Sessions & Stats -->
+      <div class="col-4" id="rightCol">
+        <div class="card">
+          <div class="section-title">
+            <h2>Previous Sessions</h2>
+            <div class="row">
+              <button class="btn ghost" id="refreshSessions">⟳ Refresh</button>
+            </div>
+          </div>
+          <div class="row">
+            <input id="searchSessions" type="text" placeholder="Search notes, vendor, contact..." />
+          </div>
+          <div class="sep"></div>
+          <div id="sessionList">Loading…</div>
+        </div>
+
+        <div class="card" style="margin-top:18px;">
+          <div class="section-title"><h2>Session Stats</h2></div>
+          <div class="grid" style="grid-template-columns: repeat(12, 1fr); gap: 10px;">
+            <div class="col-6 stat"><span class="muted">Total</span><span></span><span class="kpi" id="kpiTotal">0</span></div>
+            <div class="col-6 stat"><span class="muted">With audio</span><span></span><span class="kpi" id="kpiAudio">0</span></div>
+            <div class="col-6 stat"><span class="muted">With images</span><span></span><span class="kpi" id="kpiImages">0</span></div>
+            <div class="col-6 stat"><span class="muted">Unique vendors</span><span></span><span class="kpi" id="kpiVendors">0</span></div>
+          </div>
+          <div class="sep"></div>
+          <canvas id="vendorChart" width="600" height="260" style="width:100%"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="grid" style="grid-template-columns: repeat(12, 1fr); gap: 10px;">
+        <div class="col-12">
+          <div class="row">
+            <div class="muted">© conferenceBuddy — built for n8n Flow Endpoints</div>
+            <div class="spacer"></div>
+            <a class="btn" href="conferences.html">Open Conferences</a>
+            <button class="btn" disabled>Vendors (un-mapped)</button>
+            <button class="btn" disabled>Analytics (un-mapped)</button>
+            <button class="btn" disabled>Help & Docs (un-mapped)</button>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Settings Modal -->
+  <dialog id="settingsDlg">
+    <form method="dialog" class="container" style="padding:18px;">
+      <div class="row" style="justify-content: space-between; align-items:center;">
+        <h2>Settings</h2>
+        <button class="btn ghost" value="cancel">✕</button>
+      </div>
+      <p class="muted">Configure your n8n Flow Endpoint base URL and auth. Stored locally in your browser.</p>
+
+      <div class="grid" style="gap: 12px; grid-template-columns: repeat(12, 1fr);">
+        <div class="col-12">
+          <label for="baseUrl">n8n Base URL (no trailing slash)</label>
+          <input id="baseUrl" type="text" placeholder="https://flows.example.com" />
+        </div>
+        <div class="col-12 row">
+          <label class="pill">Use GET (instead of POST)</label>
+          <label class="row" style="gap:6px;">
+            <input id="useGet" type="checkbox" />
+            <span class="muted">POST (default) / GET</span>
+          </label>
+        </div>
+        <div class="col-6">
+          <label for="authHeader">Auth Header (optional)</label>
+          <input id="authHeader" type="text" placeholder="Authorization" />
+        </div>
+        <div class="col-6">
+          <label for="authValue">Auth Value (optional)</label>
+          <input id="authValue" type="text" placeholder="Bearer eyJ..." />
+        </div>
+        <div class="col-12">
+          <label for="mapping">Flow Path Mapping (JSON)</label>
+          <textarea id="mapping" spellcheck="false" style="min-height: 180px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;"></textarea>
+          <div class="muted">Ensure these align with your n8n API spec and deployed flow endpoints.</div>
+        </div>
+      </div>
+
+      <div class="row" style="justify-content: flex-end; margin-top: 14px;">
+        <button class="btn ghost" id="testConn" type="button">Test connection</button>
+        <button class="btn" id="saveSettings" type="submit" value="default">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Debug Modal -->
+  <dialog id="debugDlg">
+    <form method="dialog" class="container" style="padding:18px;">
+      <div class="row" style="justify-content: space-between; align-items:center;">
+        <h2>🐞 Debug</h2>
+        <button class="btn ghost" value="cancel">Close</button>
+      </div>
+      <div class="row" style="gap:8px; margin: 8px 0;">
+        <button class="btn ghost" type="button" id="dbgPause">Pause</button>
+        <button class="btn ghost" type="button" id="dbgCopy">Copy</button>
+        <button class="btn ghost" type="button" id="dbgClear">Clear</button>
+      </div>
+      <div class="card" style="max-height: 50vh; overflow: auto; background:#0a0f1b">
+        <pre id="debugLog" style="margin:0; white-space: pre-wrap; word-wrap: break-word;"></pre>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+  // ------------------------------
+  // Utilities
+  // ------------------------------
+  const $ = sel => document.querySelector(sel);
+  const $$ = sel => Array.from(document.querySelectorAll(sel));
+  const log = (...args) => debug.log(...args);
+  const tsId = (d=new Date()) => d.toISOString().slice(0,19).replaceAll(':','').replace('T','-').replaceAll('-',''); // YYYYMMDDHHmmss-ish
+  const fmtDate = (s) => new Date(s).toLocaleString();
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+  function toast(msg, type) {
+    const el = $('#toast');
+    el.textContent = msg; el.style.display = 'block';
+    el.style.borderColor = type === 'error' ? 'var(--danger)' : (type === 'ok' ? 'var(--ok)' : 'var(--border)');
+    setTimeout(()=> el.style.display = 'none', 3000);
+  }
+
+  // ------------------------------
+  // Settings (stored locally)
+  // ------------------------------
+  const DEFAULT_MAPPING = {
+    health: "/health",
+    listConferencesActive: "/conferences/active",     // ?date=YYYY-MM-DD
+    listConferences: "/conferences/list",             // optional full list
+    listVendors: "/vendors/list",
+    saveSession: "/sessions/create",
+    listSessions: "/sessions/list",                   // optional query params
+    uploadAsset: "/assets/upload"                      // multipart/form-data (POST only)
+  };
+
+  const settings = {
+    get() {
+      try { return JSON.parse(localStorage.getItem('cb.settings')) || { baseUrl: '', useGet: false, authHeader: '', authValue: '', mapping: DEFAULT_MAPPING }; }
+      catch { return { baseUrl: '', useGet: false, authHeader: '', authValue: '', mapping: DEFAULT_MAPPING }; }
+    },
+    set(obj) { localStorage.setItem('cb.settings', JSON.stringify(obj)); }
+  };
+
+  // ------------------------------
+  // Debug logging
+  // ------------------------------
+  const debug = {
+    paused: false,
+    log(...args) {
+      if (this.paused) return; const line = `[${new Date().toISOString()}] ${args.map(a => typeof a === 'string' ? a : JSON.stringify(a)).join(' ')}`;
+      const pre = $('#debugLog'); pre.textContent += line + "\n"; pre.scrollTop = pre.scrollHeight;
+    },
+    clear(){ $('#debugLog').textContent = ''; },
+    copy(){ navigator.clipboard.writeText($('#debugLog').textContent).then(()=>toast('Debug log copied')); }
+  };
+
+  // ------------------------------
+  // API wrapper
+  // ------------------------------
+  async function api(pathKey, data=null, opts={}) {
+    const cfg = settings.get();
+    if (!cfg.baseUrl) throw new Error('Base URL not set in Settings');
+    const mapping = cfg.mapping || DEFAULT_MAPPING;
+    const path = mapping[pathKey];
+    if (!path) throw new Error(`Missing mapping for ${pathKey}`);
+    const url = new URL(cfg.baseUrl + path, window.location.origin);
+
+    const method = (opts.method) || (cfg.useGet ? 'GET' : 'POST');
+    const headers = { 'Accept': 'application/json' };
+    if (cfg.authHeader && cfg.authValue) headers[cfg.authHeader] = cfg.authValue;
+
+    const fetchOpts = { method, headers };
+
+    if (method === 'GET') {
+      if (data && typeof data === 'object') Object.entries(data).forEach(([k,v]) => v != null && url.searchParams.set(k, typeof v === 'object' ? JSON.stringify(v) : v));
+    } else if (data instanceof FormData) {
+      // Multipart upload (always POST in practice)
+      fetchOpts.body = data; // Don't set content-type; browser will set boundary
+    } else if (data != null) {
+      headers['Content-Type'] = 'application/json';
+      fetchOpts.body = JSON.stringify(data);
+    }
+
+    log('→', method, url.toString(), data ? (data instanceof FormData ? '[form-data]' : JSON.stringify(data)) : '');
+    const res = await fetch(url.toString(), fetchOpts);
+    const text = await res.text();
+    let json; try { json = text ? JSON.parse(text) : {}; } catch { json = { raw: text }; }
+    log('←', res.status, url.pathname, json);
+    if (!res.ok) throw new Error(json.message || `Request failed: ${res.status}`);
+    return json;
+  }
+
+  async function testConnection(){
+    try { await api('health'); toast('Connected to n8n ✓', 'ok'); }
+    catch (e) { toast('Connection failed: ' + e.message, 'error'); }
+  }
+
+  // ------------------------------
+  // Data sources
+  // ------------------------------
+  let cache = { conferences: [], vendors: [], sessions: [], assets: {} };
+
+  async function loadConferences() {
+    const today = new Date().toISOString().slice(0,10);
+    let list = [];
+    try {
+      list = await api('listConferencesActive', { date: today });
+    } catch(e) {
+      log('Active conferences failed, trying full list:', e.message);
+      try { list = await api('listConferences'); } catch(e2){ toast('Could not load conferences: '+e2.message, 'error'); return; }
+    }
+    // Expect array of { id, name, startDate, endDate, status }
+    cache.conferences = Array.isArray(list) ? list : (list.items || []);
+    renderConferences();
+  }
+
+  async function loadVendors(){
+    try {
+      const res = await api('listVendors');
+      cache.vendors = Array.isArray(res) ? res : (res.items || []);
+      renderVendors();
+    } catch(e){ toast('Could not load vendors: ' + e.message, 'error'); }
+  }
+
+  async function loadSessions(){
+    try {
+      const res = await api('listSessions', { limit: 50 });
+      cache.sessions = Array.isArray(res) ? res : (res.items || []);
+    } catch(e){ log('listSessions failed, falling back to local only:', e.message); }
+    // Merge in locally queued (unsynced)
+    const queued = queue.getAll().map(x => ({ ...x, _local: true }));
+    const all = [...queued, ...cache.sessions];
+    renderSessions(all);
+    renderStats(all);
+  }
+
+  // ------------------------------
+  // Renderers
+  // ------------------------------
+  function renderConferences(){
+    const sel = $('#conference'); sel.innerHTML = '';
+    if (!cache.conferences.length) {
+      sel.innerHTML = '<option value="">No conferences found</option>';
+      return;
+    }
+    for (const c of cache.conferences) {
+      const o = document.createElement('option');
+      o.value = c.id ?? c.ID ?? c.slug ?? c.code ?? c.name;
+      o.textContent = `${c.name || c.title || 'Conference'}${c.startDate ? ' ('+c.startDate+')' : ''}`;
+      sel.appendChild(o);
+    }
+    // Auto-select first (assumed active for today)
+    sel.selectedIndex = 0;
+  }
+
+  function renderVendors(){
+    const sel = $('#vendor');
+    // Preserve Unknown option
+    sel.innerHTML = '<option value="__unknown">Unknown</option>';
+    for (const v of cache.vendors) {
+      const o = document.createElement('option');
+      o.value = v.id ?? v.ID ?? v.slug ?? v.code ?? v.name;
+      o.textContent = v.name || v.title || o.value;
+      sel.appendChild(o);
+    }
+  }
+
+  function renderSessions(list){
+    const q = $('#searchSessions').value.trim().toLowerCase();
+    const area = $('#sessionList');
+    if (!list || !list.length) { area.innerHTML = '<div class="muted">No sessions yet.</div>'; return; }
+    const filtered = q ? list.filter(s => JSON.stringify(s).toLowerCase().includes(q)) : list;
+    area.innerHTML = '';
+    for (const s of filtered) {
+      const el = document.createElement('div'); el.className = 'card'; el.style.marginBottom = '10px';
+      const vendor = s.vendorName || s.vendor || s.vendorId || 'Unknown';
+      const created = s.createdAt || s.capturedAt || s.timestamp || new Date().toISOString();
+      const imgs = (s.images || []).length; const aud = s.audio ? 1 : 0;
+      el.innerHTML = `
+        <div class="row" style="justify-content:space-between; align-items: baseline;">
+          <div>
+            <div class="row" style="gap:8px; align-items:center;">
+              <h3 style="margin:0">${vendor}</h3>
+              ${s._local ? '<span class="pill">Local (unsynced)</span>' : ''}
+            </div>
+            <div class="muted" style="margin-top:4px">${fmtDate(created)} · <span class="nowrap">${imgs} image(s)</span> · <span class="nowrap">${aud ? 'audio' : 'no audio'}</span></div>
+          </div>
+          <div class="row">
+            <button class="btn ghost" data-view="${s.id || s.localId || ''}">View</button>
+          </div>
+        </div>
+        <div class="muted" style="margin-top:8px; white-space: pre-line;">${(s.notes || '').slice(0,180)}${(s.notes||'').length>180?'…':''}</div>
+      `;
+      el.querySelector('[data-view]')?.addEventListener('click', () => viewSession(s));
+      area.appendChild(el);
+    }
+  }
+
+  function viewSession(s){
+    const dlg = document.createElement('dialog');
+    dlg.innerHTML = `
+      <form method="dialog" class="container" style="padding:18px;">
+        <div class="row" style="justify-content: space-between; align-items:center;">
+          <h2>Session · ${s.vendorName || s.vendor || s.vendorId || 'Unknown'}</h2>
+          <button class="btn ghost" value="cancel">✕</button>
+        </div>
+        <div class="muted" style="margin:6px 0">${fmtDate(s.createdAt || s.capturedAt || s.timestamp || new Date().toISOString())}</div>
+        <div class="sep"></div>
+        <div class="grid" style="grid-template-columns: repeat(12, 1fr); gap: 10px;">
+          <div class="col-12"><h3>Notes</h3><div class="card" style="background:#0f1424">${(s.notes || '').replace(/\n/g,'<br>') || '<span class="muted">(none)</span>'}</div></div>
+          <div class="col-12"><h3>Contact</h3>
+            <div class="card" style="background:#0f1424">
+              <div>${s.contact?.name || '<span class="muted">(no name)</span>'}</div>
+              <div class="muted">${s.contact?.company || ''}</div>
+              <div class="muted">${s.contact?.email || ''} ${s.contact?.phone ? '· '+s.contact.phone : ''}</div>
+            </div>
+          </div>
+          <div class="col-12"><h3>Attachments</h3>
+            <div class="thumbs">
+              ${(s.images||[]).map(src=>`<div class="thumb"><img src="${src.url || src}" alt="image" /></div>`).join('')}
+            </div>
+            ${s.audio ? `<audio controls style="width:100%; margin-top:10px" src="${s.audio.url || s.audio}"></audio>` : '<div class="muted">No audio</div>'}
+          </div>
+        </div>
+      </form>`;
+    document.body.appendChild(dlg); dlg.showModal(); dlg.addEventListener('close', () => dlg.remove());
+  }
+
+  function renderStats(list){
+    $('#kpiTotal').textContent = list.length;
+    $('#kpiAudio').textContent = list.filter(s => s.audio).length;
+    $('#kpiImages').textContent = list.reduce((n,s)=>n+(s.images?.length||0?1:0),0);
+    const vendors = new Map();
+    for (const s of list) {
+      const v = s.vendorName || s.vendor || s.vendorId || 'Unknown';
+      vendors.set(v, (vendors.get(v)||0) + 1);
+    }
+    $('#kpiVendors').textContent = vendors.size;
+
+    // Simple canvas bar chart
+    const canvas = $('#vendorChart'); const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height; ctx.clearRect(0,0,W,H);
+    const entries = [...vendors.entries()].sort((a,b)=>b[1]-a[1]).slice(0,8);
+    const max = Math.max(1, ...entries.map(e=>e[1]));
+    const barW = (W - 40) / entries.length; // padding
+
+    // axes
+    ctx.strokeStyle = '#2a3a66'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(30, 10); ctx.lineTo(30, H-30); ctx.lineTo(W-10, H-30); ctx.stroke();
+
+    ctx.fillStyle = '#8fb3ff';
+    entries.forEach((e,i)=>{
+      const [name, val] = e; const h = Math.round((H-60) * (val/max));
+      const x = 32 + i*barW + 6; const y = H-31 - h; const w = Math.max(18, barW - 18);
+      ctx.fillRect(x, y, w, h);
+      ctx.fillStyle = '#b9cdfa';
+      ctx.font = '12px system-ui'; ctx.textAlign = 'center';
+      ctx.fillText(String(val), x + w/2, y - 6);
+      ctx.fillStyle = '#9aa6bf';
+      const label = (name+'').slice(0,12) + (name.length>12?'…':'');
+      ctx.save(); ctx.translate(x + w/2, H-16); ctx.rotate(-Math.PI/6);
+      ctx.fillText(label, 0, 0); ctx.restore();
+      ctx.fillStyle = '#8fb3ff';
+    });
+  }
+
+  // ------------------------------
+  // Media: Images & Audio
+  // ------------------------------
+  const images = [];
+  function addImages(files){
+    for (const f of files) {
+      if (!f.type.startsWith('image/')) continue;
+      const id = crypto.randomUUID(); images.push({ id, file: f, url: URL.createObjectURL(f) });
+    }
+    renderThumbs();
+  }
+  function removeImage(id){
+    const i = images.findIndex(x=>x.id===id); if (i>=0) { URL.revokeObjectURL(images[i].url); images.splice(i,1); renderThumbs(); }
+  }
+  function renderThumbs(){
+    const area = $('#thumbs'); area.innerHTML = images.map(img=>`
+      <div class="thumb"><img src="${img.url}"/><div class="x" data-id="${img.id}">✕</div></div>`).join('');
+    $$('#thumbs .x').forEach(x=> x.addEventListener('click', e => removeImage(e.target.dataset.id)));
+  }
+
+  let rec, chunks = [], audioBlob = null, audioUrl = '';
+  async function toggleRecord(){
+    if (rec && rec.state === 'recording') { rec.stop(); return; }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      rec = new MediaRecorder(stream); chunks = []; audioBlob = null; if (audioUrl) { URL.revokeObjectURL(audioUrl); audioUrl=''; }
+      rec.ondataavailable = e => e.data.size && chunks.push(e.data);
+      rec.onstop = () => {
+        audioBlob = new Blob(chunks, { type: chunks[0]?.type || 'audio/webm' });
+        audioUrl = URL.createObjectURL(audioBlob);
+        $('#audioPreview').src = audioUrl; $('#playBtn').disabled = false; $('#delAudioBtn').disabled = false;
+        $('#recStatus').textContent = `Recorded ${(audioBlob.size/1024/1024).toFixed(2)} MB`;
+        $('#recBtn').textContent = '● Record';
+      };
+      rec.start(); $('#recBtn').textContent = '■ Stop'; $('#recStatus').textContent = 'Recording…';
+    } catch (e) { toast('Mic access failed: ' + e.message, 'error'); }
+  }
+  function playAudio(){ const a=$('#audioPreview'); if (!a.src) return; a.paused ? a.play() : a.pause(); }
+  function deleteAudio(){ if (audioUrl) URL.revokeObjectURL(audioUrl); audioUrl=''; audioBlob=null; $('#audioPreview').removeAttribute('src'); $('#playBtn').disabled=true; $('#delAudioBtn').disabled=true; $('#recStatus').textContent = 'Idle.'; }
+
+  // ------------------------------
+  // Queue (local drafts / offline)
+  // ------------------------------
+  const queue = {
+    key: 'cb.sessions.queue',
+    getAll(){ try { return JSON.parse(localStorage.getItem(this.key)) || []; } catch { return []; } },
+    setAll(items){ localStorage.setItem(this.key, JSON.stringify(items)); updatePendingCount(); },
+    add(item){ const all=this.getAll(); all.unshift(item); this.setAll(all); },
+    remove(localId){ const items=this.getAll().filter(i=>i.localId!==localId); this.setAll(items); },
+  };
+  function updatePendingCount(){
+    const n = queue.getAll().length; const el = $('#pendingCount');
+    el.textContent = n ? `Pending: ${n}` : ''; el.style.display = n ? '' : 'none';
+  }
+
+  async function syncQueue(){
+    const items = queue.getAll(); if (!items.length) { toast('Nothing to sync'); return; }
+    for (const s of items) {
+      try { await submitSession(s, true); queue.remove(s.localId); toast('Synced 1 session', 'ok'); await sleep(150); }
+      catch(e){ toast('Sync failed: '+e.message, 'error'); break; }
+    }
+    await loadSessions();
+  }
+
+  // ------------------------------
+  // Save session
+  // ------------------------------
+  async function submitSession(draft, isSync=false){
+    // Upload assets first (always POST)
+    const mapping = settings.get().mapping || DEFAULT_MAPPING;
+    const uploaded = { images: [], audio: null };
+
+    if (draft.images?.length) {
+      for (const img of draft.images) {
+        const fd = new FormData(); fd.append('file', img.file, img.file.name);
+        fd.append('type', 'image'); fd.append('sessionLocalId', draft.localId || '');
+        const res = await api('uploadAsset', fd, { method: 'POST' });
+        uploaded.images.push(res.url || res.id || res.path || res.location || res);
+        await sleep(50);
+      }
+    }
+
+    if (draft.audio) {
+      const fd = new FormData(); fd.append('file', draft.audio.blob, draft.audio.filename);
+      fd.append('type', 'audio'); fd.append('sessionLocalId', draft.localId || '');
+      const res = await api('uploadAsset', fd, { method: 'POST' });
+      uploaded.audio = res.url || res.id || res.path || res.location || res;
+    }
+
+    const payload = {
+      conferenceId: draft.conferenceId,
+      vendorId: draft.vendorId,
+      vendorName: draft.vendorName,
+      notes: draft.notes,
+      contact: draft.contact,
+      images: uploaded.images.map(u => typeof u === 'string' ? { url: u } : u),
+      audio: uploaded.audio ? (typeof uploaded.audio === 'string' ? { url: uploaded.audio } : uploaded.audio) : null,
+      capturedAt: draft.capturedAt,
+      device: { userAgent: navigator.userAgent }
+    };
+
+    const res = await api('saveSession', payload);
+    log('saveSession ok:', res);
+    return res;
+  }
+
+  async function onSaveSession(localOnly=false){
+    const conferenceId = $('#conference').value;
+    const vendorSel = $('#vendor').value;
+    const vendorName = $('#vendor').selectedOptions[0]?.textContent || 'Unknown';
+    const vendorId = vendorSel === '__unknown' ? `u-${tsId()}` : vendorSel;
+    const contact = {
+      name: $('#contactName').value.trim(),
+      email: $('#contactEmail').value.trim(),
+      phone: $('#contactPhone').value.trim(),
+      company: $('#contactCompany').value.trim(),
+    };
+    const notes = $('#notes').value.trim();
+    const capturedAt = new Date().toISOString();
+
+    const draft = {
+      localId: crypto.randomUUID(),
+      conferenceId, vendorId, vendorName, contact, notes, capturedAt,
+      images: images.map(i=>({ id:i.id, file:i.file })),
+      audio: audioBlob ? { blob: audioBlob, filename: `audio-${tsId()}.webm` } : null
+    };
+
+    if (localOnly) { queue.add(draft); toast('Saved locally', 'ok'); clearForm(); updatePendingCount(); renderSessions([...queue.getAll().map(x=>({...x,_local:true})), ...cache.sessions]); return; }
+
+    try {
+      await submitSession(draft);
+      toast('Session saved ✓', 'ok');
+      clearForm();
+      await loadSessions();
+    } catch(e) {
+      toast('Save failed, stored locally: ' + e.message, 'error');
+      queue.add(draft); updatePendingCount();
+    }
+  }
+
+  function clearForm(){
+    $('#notes').value='';
+    $('#contactName').value=''; $('#contactEmail').value=''; $('#contactPhone').value=''; $('#contactCompany').value='';
+    images.splice(0, images.length); renderThumbs(); deleteAudio();
+  }
+
+  // ------------------------------
+  // Init
+  // ------------------------------
+  async function init(){
+    // Populate settings UI
+    const cfg = settings.get();
+    $('#baseUrl').value = cfg.baseUrl || '';
+    $('#useGet').checked = !!cfg.useGet;
+    $('#authHeader').value = cfg.authHeader || '';
+    $('#authValue').value = cfg.authValue || '';
+    $('#mapping').value = JSON.stringify(cfg.mapping || DEFAULT_MAPPING, null, 2);
+
+    updatePendingCount();
+    await Promise.all([loadConferences(), loadVendors()]);
+    await loadSessions();
+  }
+
+  // ------------------------------
+  // Events
+  // ------------------------------
+  document.addEventListener('DOMContentLoaded', init);
+
+  $('#openSettings').addEventListener('click', ()=> $('#settingsDlg').showModal());
+  $('#openDebug').addEventListener('click', ()=> $('#debugDlg').showModal());
+
+  $('#saveSettings').addEventListener('click', (e)=>{
+    e.preventDefault();
+    try {
+      const mapping = JSON.parse($('#mapping').value || '{}');
+      settings.set({ baseUrl: $('#baseUrl').value.trim(), useGet: $('#useGet').checked, authHeader: $('#authHeader').value.trim(), authValue: $('#authValue').value.trim(), mapping });
+      $('#settingsDlg').close(); toast('Settings saved', 'ok');
+      init();
+    } catch (e) { toast('Invalid mapping JSON: ' + e.message, 'error'); }
+  });
+  $('#testConn').addEventListener('click', testConnection);
+
+  $('#recBtn').addEventListener('click', toggleRecord);
+  $('#playBtn').addEventListener('click', playAudio);
+  $('#delAudioBtn').addEventListener('click', deleteAudio);
+
+  $('#imgInput').addEventListener('change', (e)=> addImages(e.target.files));
+
+  $('#saveBtn').addEventListener('click', ()=> onSaveSession(false));
+  $('#saveLocalBtn').addEventListener('click', ()=> onSaveSession(true));
+  $('#clearBtn').addEventListener('click', clearForm);
+
+  $('#refreshMeta').addEventListener('click', async ()=>{ await Promise.all([loadConferences(), loadVendors()]); toast('Lists refreshed'); });
+  $('#refreshSessions').addEventListener('click', loadSessions);
+  $('#searchSessions').addEventListener('input', ()=> renderSessions([...queue.getAll().map(x=>({...x,_local:true})), ...cache.sessions]));
+
+  // Debug controls
+  $('#dbgPause').addEventListener('click', ()=> (debug.paused = !debug.paused, $('#dbgPause').textContent = debug.paused ? 'Resume' : 'Pause'));
+  $('#dbgCopy').addEventListener('click', ()=> debug.copy());
+  $('#dbgClear').addEventListener('click', ()=> debug.clear());
+
+  // Add a quick sync button in debug modal toolbar
+  const syncBtn = document.createElement('button'); syncBtn.className='btn'; syncBtn.type='button'; syncBtn.textContent='Sync pending';
+  syncBtn.addEventListener('click', syncQueue); $('#debugDlg form .row').appendChild(syncBtn);
+
+  // Surface sync in header via long-press on pending badge
+  $('#pendingCount').addEventListener('click', syncQueue);
+  </script>
+</body>
+</html>
