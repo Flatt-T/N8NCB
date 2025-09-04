@@ -1,5 +1,4 @@
 <!doctype html>
-
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -28,40 +27,40 @@
       color: var(--text);
     }
     a { color: var(--primary); text-decoration: none; }
-    a:hover { text-decoration: underline; }.container { max-width: 1100px; margin: 0 auto; padding: 20px; }
-header { position: sticky; top: 0; z-index: 20; background: linear-gradient(180deg, rgba(11,13,18,.9) 0, rgba(11,13,18,.6) 100%); backdrop-filter: saturate(140%) blur(8px); border-bottom: 1px solid var(--border); }
-.topbar { display: flex; align-items: center; gap: 10px; padding: 14px 20px; }
-.brand { font-weight: 700; letter-spacing: .3px; }
-.spacer { flex: 1; }
+    a:hover { text-decoration: underline; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+    header { position: sticky; top: 0; z-index: 20; background: linear-gradient(180deg, rgba(11,13,18,.9) 0, rgba(11,13,18,.6) 100%); backdrop-filter: saturate(140%) blur(8px); border-bottom: 1px solid var(--border); }
+    .topbar { display: flex; align-items: center; gap: 10px; padding: 14px 20px; }
+    .brand { font-weight: 700; letter-spacing: .3px; }
+    .spacer { flex: 1; }
 
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; padding: .6rem .9rem; border-radius: 12px; border: 1px solid var(--border); background: linear-gradient(180deg, #162137, #12192d); color: var(--text); box-shadow: var(--shadow); cursor: pointer; transition: .18s ease transform, .18s ease background, .18s ease border; }
-.btn:hover { transform: translateY(-1px); border-color: #2a3a66; }
-.btn:disabled { opacity: .55; cursor: not-allowed; filter: grayscale(.2); }
-.primary { background: linear-gradient(180deg, var(--primary), var(--primary-2)); border-color: #2f58c8; }
-.ghost { background: transparent; border-color: var(--border); }
-.pill { display: inline-block; background: #233255; color: #b8c6e3; border: 1px solid var(--border); padding: .15rem .5rem; border-radius: 999px; font-size: .75rem; }
-.muted { color: var(--muted); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; padding: .6rem .9rem; border-radius: 12px; border: 1px solid var(--border); background: linear-gradient(180deg, #162137, #12192d); color: var(--text); box-shadow: var(--shadow); cursor: pointer; transition: .18s ease transform, .18s ease background, .18s ease border; }
+    .btn:hover { transform: translateY(-1px); border-color: #2a3a66; }
+    .btn:disabled { opacity: .55; cursor: not-allowed; filter: grayscale(.2); }
+    .primary { background: linear-gradient(180deg, var(--primary), var(--primary-2)); border-color: #2f58c8; }
+    .ghost { background: transparent; border-color: var(--border); }
+    .pill { display: inline-block; background: #233255; color: #b8c6e3; border: 1px solid var(--border); padding: .15rem .5rem; border-radius: 999px; font-size: .75rem; }
+    .muted { color: var(--muted); }
 
-.hero { padding: 24px 0 8px; }
-.hero h1 { margin: 0 0 6px; font-size: 1.6rem; }
+    .hero { padding: 24px 0 8px; }
+    .hero h1 { margin: 0 0 6px; font-size: 1.6rem; }
 
-.grid { display: grid; gap: 18px; grid-template-columns: repeat(12, 1fr); }
-.card { background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px; position: relative; overflow: hidden; }
-.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-.row .btn { white-space: nowrap; }
+    .grid { display: grid; gap: 18px; grid-template-columns: repeat(12, 1fr); }
+    .card { background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01)); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px; position: relative; overflow: hidden; }
+    .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .row .btn { white-space: nowrap; }
 
-.col-4 { grid-column: span 4; }
-.col-12 { grid-column: span 12; }
-@media (max-width: 960px) { .col-4 { grid-column: span 12; } .topbar .hide-sm { display: none; } }
+    .col-4 { grid-column: span 4; }
+    .col-12 { grid-column: span 12; }
+    @media (max-width: 960px) { .col-4 { grid-column: span 12; } .topbar .hide-sm { display: none; } }
 
-footer { margin: 28px 0 12px; color: var(--muted); font-size: .9rem; }
+    footer { margin: 28px 0 12px; color: var(--muted); font-size: .9rem; }
 
-dialog { border: 1px solid var(--border); border-radius: 16px; background: #0c1324; color: var(--text); box-shadow: var(--shadow); width: min(820px, 96vw); }
-dialog::backdrop { background: rgba(5,8,14,.6); backdrop-filter: blur(2px); }
+    dialog { border: 1px solid var(--border); border-radius: 16px; background: #0c1324; color: var(--text); box-shadow: var(--shadow); width: min(820px, 96vw); }
+    dialog::backdrop { background: rgba(5,8,14,.6); backdrop-filter: blur(2px); }
 
-input[type="text"], textarea { width: 100%; padding: .7rem .8rem; color: var(--text); background: #0d1426; border: 1px solid var(--border); border-radius: 12px; outline: none; box-shadow: inset 0 1px 0 rgba(255,255,255,.03); }
-label { display: block; font-weight: 600; margin-bottom: 6px; color: #c8d5f3; }
-
+    input[type="text"], textarea { width: 100%; padding: .7rem .8rem; color: var(--text); background: #0d1426; border: 1px solid var(--border); border-radius: 12px; outline: none; box-shadow: inset 0 1px 0 rgba(255,255,255,.03); }
+    label { display: block; font-weight: 600; margin-bottom: 6px; color: #c8d5f3; }
   </style>
 </head>
 <body>
@@ -72,108 +71,121 @@ label { display: block; font-weight: 600; margin-bottom: 6px; color: #c8d5f3; }
       <div class="spacer"></div>
       <a class="btn" href="conferences.html">Open Conferences</a>
       <a class="btn" href="sessions.html">Open Sessions</a>
+      <a class="btn" href="test.html">🧪 API Tests</a>
       <button class="btn" id="openSettings">⚙︎ Settings</button>
       <button class="btn ghost" id="openDebug">🐞 Debug</button>
     </div>
-  </header>  <main class="container">
+  </header>
+
+  <main class="container">
     <section class="hero">
       <h1># Welcome to conferenceBuddy</h1>
       <p class="muted">Manage conferences, sessions, vendors, and reports through n8n Flow Endpoints.</p>
       <div class="row" style="margin-top: 8px;">
         <a class="btn primary" href="conferences.html">Go to Conferences</a>
         <a class="btn" href="sessions.html">Go to Sessions</a>
+        <a class="btn" href="test.html">🧪 Run API Tests</a>
         <button class="btn" id="openSettings2">Configure endpoints with ⚙︎ Settings</button>
       </div>
-    </section><section class="grid">
-  <div class="card col-4">
-    <h3>Conferences</h3>
-    <p class="muted">Create, view, and report on conferences with enriched data.</p>
-    <div class="row">
-      <a class="btn primary" href="conferences.html">Open</a>
-    </div>
-  </div>
+    </section>
 
-  <div class="card col-4">
-    <h3>Vendors</h3>
-    <p class="muted">Browse vendors, assign booths, and track leads.</p>
-    <div class="row">
-      <button class="btn" disabled>Open (un-mapped)</button>
-      <span class="pill">Coming soon</span>
-    </div>
-  </div>
+    <section class="grid">
+      <div class="card col-4">
+        <h3>Conferences</h3>
+        <p class="muted">Create, view, and report on conferences with enriched data.</p>
+        <div class="row">
+          <a class="btn primary" href="conferences.html">Open</a>
+          <a class="btn" href="test.html#conference">Test</a>
+        </div>
+      </div>
 
-  <div class="card col-4">
-    <h3>Sessions</h3>
-    <p class="muted">Plan sessions, speakers, and feedback analytics.</p>
-    <div class="row">
-      <a class="btn" href="sessions.html">Open</a>
-      <span class="pill">New</span>
-    </div>
-  </div>
+      <div class="card col-4">
+        <h3>Vendors</h3>
+        <p class="muted">Browse vendors, assign booths, and track leads.</p>
+        <div class="row">
+          <button class="btn" disabled>Open (un-mapped)</button>
+          <span class="pill">Coming soon</span>
+        </div>
+      </div>
 
-  <div class="card col-4">
-    <h3>Analytics</h3>
-    <p class="muted">Dashboards and KPI trends for conferences.</p>
-    <div class="row">
-      <button class="btn" disabled>Open (un-mapped)</button>
-      <span class="pill">Coming soon</span>
-    </div>
-  </div>
+      <div class="card col-4">
+        <h3>Sessions</h3>
+        <p class="muted">Plan sessions, speakers, and feedback analytics.</p>
+        <div class="row">
+          <a class="btn" href="sessions.html">Open</a>
+          <a class="btn" href="test.html#session">Test</a>
+          <span class="pill">New</span>
+        </div>
+      </div>
 
-  <div class="card col-4">
-    <h3>Help & Docs</h3>
-    <p class="muted">API specs, troubleshooting, and best practices.</p>
-    <div class="row">
-      <button class="btn" disabled>Open (un-mapped)</button>
-      <span class="pill">Coming soon</span>
-    </div>
-  </div>
-</section>
+      <div class="card col-4">
+        <h3>Analytics</h3>
+        <p class="muted">Dashboards and KPI trends for conferences.</p>
+        <div class="row">
+          <button class="btn" disabled>Open (un-mapped)</button>
+          <span class="pill">Coming soon</span>
+        </div>
+      </div>
 
-<footer>
-  © conferenceBuddy — built for n8n Flow Endpoints
-</footer>
+      <div class="card col-4">
+        <h3>Help & Docs</h3>
+        <p class="muted">API specs, troubleshooting, and best practices.</p>
+        <div class="row">
+          <a class="btn" href="test.html#docs">Open</a>
+          <span class="pill">Spec</span>
+        </div>
+      </div>
+    </section>
 
-  </main>  <!-- Settings Modal -->  <dialog id="settingsDlg">
+    <footer>
+      © conferenceBuddy — built for n8n Flow Endpoints
+    </footer>
+  </main>
+
+  <!-- Settings Modal -->
+  <dialog id="settingsDlg">
     <form method="dialog" class="container" style="padding:18px;">
       <div class="row" style="justify-content: space-between; align-items:center;">
         <h2>Settings</h2>
         <button class="btn ghost" value="cancel">✕</button>
       </div>
-      <p class="muted">Configure your n8n Flow Endpoint base URL and auth. Stored locally in your browser.</p><div class="grid" style="gap: 12px; grid-template-columns: repeat(12, 1fr);">
-    <div class="col-12">
-      <label for="baseUrl">n8n Base URL (no trailing slash)</label>
-      <input id="baseUrl" type="text" placeholder="https://flows.example.com" />
-    </div>
-    <div class="col-12 row">
-      <label class="pill">Use GET (instead of POST)</label>
-      <label class="row" style="gap:6px;">
-        <input id="useGet" type="checkbox" />
-        <span class="muted">POST (default) / GET</span>
-      </label>
-    </div>
-    <div class="col-6">
-      <label for="authHeader">Auth Header (optional)</label>
-      <input id="authHeader" type="text" placeholder="Authorization" />
-    </div>
-    <div class="col-6">
-      <label for="authValue">Auth Value (optional)</label>
-      <input id="authValue" type="text" placeholder="Bearer eyJ..." />
-    </div>
-    <div class="col-12">
-      <label for="mapping">Flow Path Mapping (JSON)</label>
-      <textarea id="mapping" spellcheck="false" style="min-height: 180px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;"></textarea>
-      <div class="muted">Ensure these align with your n8n API spec and deployed flow endpoints.</div>
-    </div>
-  </div>
+      <p class="muted">Configure your n8n Flow Endpoint base URL and auth. Stored locally in your browser.</p>
+      <div class="grid" style="gap: 12px; grid-template-columns: repeat(12, 1fr);">
+        <div class="col-12">
+          <label for="baseUrl">n8n Base URL (no trailing slash)</label>
+          <input id="baseUrl" type="text" placeholder="https://flows.example.com" />
+        </div>
+        <div class="col-12 row">
+          <label class="pill">Use GET (instead of POST)</label>
+          <label class="row" style="gap:6px;">
+            <input id="useGet" type="checkbox" />
+            <span class="muted">POST (default) / GET</span>
+          </label>
+        </div>
+        <div class="col-6">
+          <label for="authHeader">Auth Header (optional)</label>
+          <input id="authHeader" type="text" placeholder="Authorization" />
+        </div>
+        <div class="col-6">
+          <label for="authValue">Auth Value (optional)</label>
+          <input id="authValue" type="text" placeholder="Bearer eyJ..." />
+        </div>
+        <div class="col-12">
+          <label for="mapping">Flow Path Mapping (JSON)</label>
+          <textarea id="mapping" spellcheck="false" style="min-height: 180px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;"></textarea>
+          <div class="muted">Ensure these align with your n8n API spec and deployed flow endpoints.</div>
+        </div>
+      </div>
 
-  <div class="row" style="justify-content: flex-end; margin-top: 14px;">
-    <button class="btn ghost" id="testConn" type="button">Test connection</button>
-    <button class="btn" id="saveSettings" type="submit" value="default">Save</button>
-  </div>
-</form>
+      <div class="row" style="justify-content: flex-end; margin-top: 14px;">
+        <button class="btn ghost" id="testConn" type="button">Test connection</button>
+        <button class="btn" id="saveSettings" type="submit" value="default">Save</button>
+      </div>
+    </form>
+  </dialog>
 
-  </dialog>  <!-- Debug Modal -->  <dialog id="debugDlg">
+  <!-- Debug Modal -->
+  <dialog id="debugDlg">
     <form method="dialog" class="container" style="padding:18px;">
       <div class="row" style="justify-content: space-between; align-items:center;">
         <h2>🐞 Debug</h2>
@@ -183,28 +195,33 @@ label { display: block; font-weight: 600; margin-bottom: 6px; color: #c8d5f3; }
         <pre id="debugLog" style="margin:0; white-space: pre-wrap; word-wrap: break-word;"></pre>
       </div>
     </form>
-  </dialog>  <script>
+  </dialog>
+
+  <script>
     const DEFAULT_MAPPING = {
+      // Keep health if you have it; otherwise testConnection will fallback smartly.
       health: "/health",
-      listConferencesActive: "/conferences/active",
-      listConferences: "/conferences/list",
-      listVendors: "/vendors/list",
-      saveSession: "/sessions/create",
-      listSessions: "/sessions/list",
-      uploadAsset: "/assets/upload"
+      conference: "/conference",
+      company: "/company",
+      session: "/session",
+      report: "/report",
+      assistant: "/assistant",
+      search: "/search"
     };
 
     const settings = {
       get() {
-        try { return JSON.parse(localStorage.getItem('cb.settings')) || { baseUrl: '', useGet: false, authHeader: '', authValue: '', mapping: DEFAULT_MAPPING }; }
-        catch { return { baseUrl: '', useGet: false, authHeader: '', authValue: '', mapping: DEFAULT_MAPPING }; }
+        try {
+          return JSON.parse(localStorage.getItem('cb.settings')) || { baseUrl: '', useGet: false, authHeader: '', authValue: '', mapping: DEFAULT_MAPPING };
+        } catch {
+          return { baseUrl: '', useGet: false, authHeader: '', authValue: '', mapping: DEFAULT_MAPPING };
+        }
       },
       set(obj) { localStorage.setItem('cb.settings', JSON.stringify(obj)); }
     };
 
     const $ = s => document.querySelector(s);
-
-    function toast(msg){ console.log('[toast]', msg); }
+    function toast(msg){ console.log('[toast]', msg); const el = $('#debugLog'); if (el) el.textContent += '\\n' + msg; }
 
     function loadSettingsUI(){
       const cfg = settings.get();
@@ -212,13 +229,14 @@ label { display: block; font-weight: 600; margin-bottom: 6px; color: #c8d5f3; }
       $('#useGet').checked = !!cfg.useGet;
       $('#authHeader').value = cfg.authHeader || '';
       $('#authValue').value = cfg.authValue || '';
-      $('#mapping').value = JSON.stringify(cfg.mapping || DEFAULT_MAPPING, null, 2);
+      $('#mapping').value = JSON.stringify({ ...DEFAULT_MAPPING, ...(cfg.mapping || {}) }, null, 2);
     }
 
     async function api(pathKey){
       const cfg = settings.get();
       if (!cfg.baseUrl) throw new Error('Base URL not set');
       const path = (cfg.mapping||DEFAULT_MAPPING)[pathKey];
+      if (!path) throw new Error('No mapping for key: ' + pathKey);
       const url = cfg.baseUrl + path;
       const headers = { 'Accept': 'application/json' };
       if (cfg.authHeader && cfg.authValue) headers[cfg.authHeader] = cfg.authValue;
@@ -228,8 +246,25 @@ label { display: block; font-weight: 600; margin-bottom: 6px; color: #c8d5f3; }
     }
 
     async function testConnection(){
-      try { await api('health'); toast('Connected to n8n ✓'); }
-      catch(e){ toast('Connection failed: ' + e.message); }
+      const cfg = settings.get();
+      try {
+        if ((cfg.mapping||{}).health) {
+          await api('health');
+          toast('Connected to n8n ✓ (health)');
+          return;
+        }
+        // Fallback: try a harmless search
+        const url = new URL((cfg.baseUrl||'') + ((cfg.mapping||DEFAULT_MAPPING).search||'/search'));
+        url.searchParams.set('q', '__ping__');
+        const headers = { 'Accept': 'application/json' };
+        if (cfg.authHeader && cfg.authValue) headers[cfg.authHeader] = cfg.authValue;
+        const res = await fetch(url.toString(), { headers });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        await res.json().catch(()=>{});
+        toast('Connected to n8n ✓ (search ping)');
+      } catch(e){
+        toast('Connection failed: ' + e.message);
+      }
     }
 
     // Events
@@ -241,10 +276,17 @@ label { display: block; font-weight: 600; margin-bottom: 6px; color: #c8d5f3; }
       e.preventDefault();
       try {
         const mapping = JSON.parse($('#mapping').value || '{}');
-        settings.set({ baseUrl: $('#baseUrl').value.trim(), useGet: $('#useGet').checked, authHeader: $('#authHeader').value.trim(), authValue: $('#authValue').value.trim(), mapping });
+        settings.set({
+          baseUrl: $('#baseUrl').value.trim(),
+          useGet: $('#useGet').checked,
+          authHeader: $('#authHeader').value.trim(),
+          authValue: $('#authValue').value.trim(),
+          mapping: { ...DEFAULT_MAPPING, ...mapping }
+        });
         $('#settingsDlg').close(); toast('Settings saved');
       } catch (e) { toast('Invalid mapping JSON: ' + e.message); }
     });
     $('#testConn').addEventListener('click', testConnection);
-  </script></body>
+  </script>
+</body>
 </html>
