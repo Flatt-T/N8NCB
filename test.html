@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>conferenceBuddy · API Tests</title>
+  <style>
+    :root {
+      --bg:#0b0d12; --panel:#121621; --text:#e8eefc; --muted:#9aa6bf;
+      --primary:#6aa1ff; --primary-2:#3a7bff; --border:#1f2a44;
+      --radius:16px; --shadow:0 10px 30px rgba(8,12,20,.45);
+    }
+    body{margin:0;font:15px/1.5 system-ui;background:var(--bg);color:var(--text);}
+    header{position:sticky;top:0;background:#121621;z-index:10;border-bottom:1px solid var(--border);}
+    .topbar{display:flex;align-items:center;padding:14px 20px;gap:12px;}
+    .brand{font-weight:700;}
+    .spacer{flex:1;}
+    .btn{padding:.5rem .9rem;border-radius:12px;background:#162137;color:var(--text);border:1px solid var(--border);cursor:pointer;}
+    .btn.primary{background:linear-gradient(180deg,var(--primary),var(--primary-2));border-color:#2f58c8;}
+    .container{max-width:1100px;margin:0 auto;padding:20px;}
+    label{display:block;margin:.6rem 0 .2rem;color:#c8d5f3;font-weight:600;}
+    input,select,textarea{width:100%;padding:.6rem .7rem;border-radius:10px;border:1px solid var(--border);background:#0d1426;color:var(--text);}
+    textarea{min-height:120px;font-family:ui-monospace;}
+    .drawer{position:fixed;bottom:0;left:0;right:0;max-height:40vh;background:#0a0f1b;border-top:1px solid var(--border);overflow:auto;padding:12px;display:none;}
+    pre{white-space:pre-wrap;word-break:break-word;font-size:.85rem;}
+  </style>
+</head>
+<body>
+<header>
+  <div class="topbar">
+    <div class="brand">conferenceBuddy <span class="muted">· API Tests</span></div>
+    <div class="spacer"></div>
+    <a href="index.html" class="btn">← Back Home</a>
+    <button class="btn" id="toggleDrawer">🐞 Debug</button>
+  </div>
+</header>
+
+<main class="container">
+  <h1>API Endpoint Tester</h1>
+  <form id="apiForm">
+    <label for="endpoint">Endpoint</label>
+    <input id="endpoint" type="text" placeholder="/conferences/list"/>
+
+    <label for="method">Method</label>
+    <select id="method">
+      <option>GET</option>
+      <option>POST</option>
+      <option>PUT</option>
+      <option>DELETE</option>
+    </select>
+
+    <label for="headers">Headers (JSON)</label>
+    <textarea id="headers" placeholder='{"Authorization":"Bearer ..."}'></textarea>
+
+    <label for="body">Body (JSON)</label>
+    <textarea id="body" placeholder='{"example":"value"}'></textarea>
+
+    <div style="margin-top:12px;display:flex;gap:10px;">
+      <button class="btn primary" type="submit">Send Request</button>
+      <button class="btn" id="saveEndpoint" type="button">Save Endpoint</button>
+    </div>
+  </form>
+
+  <h2 style="margin-top:30px;">Saved Endpoints</h2>
+  <div id="savedList"></div>
+</main>
+
+<div class="drawer" id="drawer">
+  <h3>Debug Log</h3>
+  <pre id="debugLog"></pre>
+</div>
+
+<script>
+const $ = s=>document.querySelector(s);
+const savedKey = 'cb.test.endpoints';
+
+function loadSaved(){
+  const list = JSON.parse(localStorage.getItem(savedKey)||'[]');
+  $('#savedList').innerHTML='';
+  list.forEach((ep,i)=>{
+    const btn=document.createElement('button');
+    btn.className='btn'; btn.textContent=ep;
+    btn.onclick=()=>$('#endpoint').value=ep;
+    $('#savedList').appendChild(btn);
+  });
+}
+function saveEndpoint(ep){
+  let list=JSON.parse(localStorage.getItem(savedKey)||'[]');
+  if(!list.includes(ep)){ list.push(ep); localStorage.setItem(savedKey,JSON.stringify(list)); }
+  loadSaved();
+}
+function log(msg){ $('#debugLog').textContent=msg; }
+
+$('#apiForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const url=(localStorage.getItem('cb.baseUrl')||'')+$('#endpoint').value.trim();
+  const method=$('#method').value;
+  let headers={};
+  try{headers=JSON.parse($('#headers').value||'{}');}catch{}
+  let body;
+  try{body=JSON.parse($('#body').value||'{}');}catch{}
+  const opts={method,headers};
+  if(method!=='GET') opts.body=JSON.stringify(body);
+  log('▶ Request:\n'+JSON.stringify({url,method,headers,body},null,2));
+  try{
+    const res=await fetch(url,opts);
+    const text=await res.text();
+    log('▶ Request:\n'+JSON.stringify({url,method,headers,body},null,2)+'\n\n'+'◀ Response:\nStatus '+res.status+'\n'+text);
+  }catch(err){
+    log('Error: '+err.message);
+  }
+});
+$('#saveEndpoint').onclick=()=>{ saveEndpoint($('#endpoint').value.trim()); };
+$('#toggleDrawer').onclick=()=>{ $('#drawer').style.display=($('#drawer').style.display==='block'?'none':'block'); };
+document.addEventListener('DOMContentLoaded',loadSaved);
+</script>
+</body>
+</html>
