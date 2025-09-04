@@ -9,9 +9,12 @@
     --bg:#0b0d12;--panel:#121621;--text:#e8eefc;--muted:#9aa6bf;
     --primary:#6aa1ff;--primary-2:#3a7bff;--border:#1f2a44;
     --radius:16px;--shadow:0 10px 30px rgba(8,12,20,.45);
+    --danger:#ff6a6a;--warn:#ffd36a;--ok:#6aff93;
   }
   *{box-sizing:border-box}
-  body{margin:0;font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:radial-gradient(1200px 600px at 10% -10%,#19315644,transparent),radial-gradient(800px 500px at 90% -20%,#13203544,transparent),var(--bg);color:var(--text)}
+  body{margin:0;font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:
+    radial-gradient(1200px 600px at 10% -10%, #19315644, transparent),
+    radial-gradient(800px 500px at 90% -20%, #13203544, transparent),var(--bg);color:var(--text)}
   header{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,rgba(11,13,18,.9) 0,rgba(11,13,18,.6) 100%);backdrop-filter:saturate(140%) blur(8px);border-bottom:1px solid var(--border)}
   .topbar{display:flex;align-items:center;gap:10px;padding:14px 20px}
   .brand{font-weight:700}
@@ -40,6 +43,11 @@
   .drawer .hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border)}
   .drawer pre{margin:0;padding:12px;max-height:46vh;overflow:auto;white-space:pre-wrap;word-wrap:break-word}
   .filechip{display:inline-flex;align-items:center;gap:6px;border:1px dashed #32406a;border-radius:10px;padding:.15rem .45rem;font-size:.85rem}
+  .env{border-left:4px solid var(--warn);padding:10px 12px;background:#101426;margin:10px 0;border-radius:10px}
+  .env.ok{border-left-color:var(--ok)}
+  .env.bad{border-left-color:var(--danger)}
+  .hint{font-size:.85rem}
+  .toggle{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);padding:.25rem .5rem;border-radius:10px}
 </style>
 </head>
 <body>
@@ -55,7 +63,16 @@
 
 <main class="container">
   <h1>API Test Panels</h1>
-  <p class="muted">Base URL & endpoint mapping are read from <b>Settings</b> (⚙︎ on Home). Override and save per panel if needed.</p>
+
+  <!-- Environment diagnostics (GitHub Pages & CORS) -->
+  <div id="envBox" class="env">
+    <div><strong>Environment Check</strong></div>
+    <div id="envMsg" class="muted hint"></div>
+    <div class="row" style="margin-top:8px">
+      <label class="toggle"><input type="checkbox" id="chk_simple_post"> Simple POST (avoid preflight)</label>
+      <label class="toggle"><input type="checkbox" id="chk_with_creds"> Include credentials (cookies)</label>
+    </div>
+  </div>
 
   <!-- CONFERENCE -->
   <section class="card">
@@ -80,25 +97,15 @@
         <label>Name</label><input id="conf_name" type="text" placeholder="DemoConf">
         <label>Website URL (optional)</label><input id="conf_site" type="url" placeholder="https://...">
         <div class="row">
-          <div style="flex:1">
-            <label>Start Date</label><input id="conf_start" type="text" placeholder="2025-10-01">
-          </div>
-          <div style="flex:1">
-            <label>End Date</label><input id="conf_end" type="text" placeholder="2025-10-02">
-          </div>
+          <div style="flex:1"><label>Start Date</label><input id="conf_start" type="text" placeholder="2025-10-01"></div>
+          <div style="flex:1"><label>End Date</label><input id="conf_end" type="text" placeholder="2025-10-02"></div>
         </div>
         <label>Location (optional)</label><input id="conf_loc" type="text" placeholder="Las Vegas, NV">
         <label>Goals (optional)</label><textarea id="conf_goals" placeholder="Looking for battery vendors..."></textarea>
         <div class="row">
-          <div>
-            <label>Booth Map Image</label><input id="conf_map" type="file" accept="image/*">
-          </div>
-          <div>
-            <label>Exhibitors PDF</label><input id="conf_pdf" type="file" accept="application/pdf">
-          </div>
-          <div>
-            <label>Goals Voice Note</label><input id="conf_audio" type="file" accept="audio/*">
-          </div>
+          <div><label>Booth Map Image</label><input id="conf_map" type="file" accept="image/*"></div>
+          <div><label>Exhibitors PDF</label><input id="conf_pdf" type="file" accept="application/pdf"></div>
+          <div><label>Goals Voice Note</label><input id="conf_audio" type="file" accept="audio/*"></div>
         </div>
         <div class="row" style="margin-top:8px">
           <label class="row" style="gap:6px;"><input id="conf_import" type="checkbox"> Import exhibitors</label>
@@ -118,17 +125,11 @@
 
         <h3 style="margin-top:22px">GET / DELETE</h3>
         <div class="row">
-          <div style="flex:1">
-            <label>GET query params</label>
-            <input id="confg_query" type="text" placeholder="id=conf_2025_demo">
-          </div>
+          <div style="flex:1"><label>GET query params</label><input id="confg_query" type="text" placeholder="id=conf_2025_demo"></div>
           <button class="btn" id="send_conf_get" type="button">Send GET</button>
         </div>
         <div class="row" style="margin-top:10px">
-          <div style="flex:1">
-            <label>DELETE body</label>
-            <input id="confd_id" type="text" placeholder='conf_2025_demo'>
-          </div>
+          <div style="flex:1"><label>DELETE body</label><input id="confd_id" type="text" placeholder='conf_2025_demo'></div>
           <button class="btn" id="send_conf_delete" type="button">Send DELETE</button>
         </div>
       </div>
@@ -156,8 +157,7 @@
         <h3>POST Upsert (1..N)</h3>
         <label>Companies JSON</label>
         <textarea id="comp_post_json" placeholder='[{"id":"acme","name":"Acme Corp","website":"https://acme.com","conference_ids":["conf_2025_demo"],"tags":["battery"]}]'></textarea>
-        <label>Options</label>
-        <input id="comp_post_opts" type="text" placeholder='{"enqueue_enrichment":true}'>
+        <label>Options</label><input id="comp_post_opts" type="text" placeholder='{"enqueue_enrichment":true}'>
         <div class="row" style="margin-top:10px"><button class="btn primary" id="send_comp_post" type="button">Send POST</button></div>
       </div>
       <div class="col-6">
@@ -167,17 +167,11 @@
 
         <h3 style="margin-top:22px">GET / DELETE</h3>
         <div class="row">
-          <div style="flex:1">
-            <label>GET query</label>
-            <input id="comp_get_q" type="text" placeholder="conference_id=conf_2025_demo&limit=20">
-          </div>
+          <div style="flex:1"><label>GET query</label><input id="comp_get_q" type="text" placeholder="conference_id=conf_2025_demo&limit=20"></div>
           <button class="btn" id="send_comp_get" type="button">Send GET</button>
         </div>
         <div class="row" style="margin-top:10px">
-          <div style="flex:1">
-            <label>DELETE body (IDs)</label>
-            <textarea id="comp_del_json" placeholder='{"ids":["acme","globex"]}'></textarea>
-          </div>
+          <div style="flex:1"><label>DELETE body (IDs)</label><textarea id="comp_del_json" placeholder='{"ids":["acme","globex"]}'></textarea></div>
           <button class="btn" id="send_comp_delete" type="button">Send DELETE</button>
         </div>
       </div>
@@ -222,12 +216,8 @@
           <label class="row" style="gap:6px;"><input id="sess_follow" type="checkbox"> Follow-up</label>
         </div>
         <div class="row" style="margin-top:8px">
-          <div>
-            <label>Audio files</label><input id="sess_audio" type="file" accept="audio/*" multiple>
-          </div>
-          <div>
-            <label>Images</label><input id="sess_imgs" type="file" accept="image/*" multiple>
-          </div>
+          <div><label>Audio files</label><input id="sess_audio" type="file" accept="audio/*" multiple></div>
+          <div><label>Images</label><input id="sess_imgs" type="file" accept="image/*" multiple></div>
         </div>
         <div id="sess_files" class="muted" style="margin-top:6px"></div>
         <div class="row" style="margin-top:10px"><button class="btn primary" id="send_sess_post" type="button">Send POST</button></div>
@@ -242,15 +232,11 @@
 
         <h3 style="margin-top:22px">GET / DELETE</h3>
         <div class="row">
-          <div style="flex:1">
-            <label>GET query</label><input id="sess_get_q" type="text" placeholder="conference_id=conf_2025_demo&limit=20">
-          </div>
+          <div style="flex:1"><label>GET query</label><input id="sess_get_q" type="text" placeholder="conference_id=conf_2025_demo&limit=20"></div>
           <button class="btn" id="send_sess_get" type="button">Send GET</button>
         </div>
         <div class="row" style="margin-top:10px">
-          <div style="flex:1">
-            <label>DELETE body</label><input id="sess_del_id" type="text" placeholder="sess_1">
-          </div>
+          <div style="flex:1"><label>DELETE body</label><input id="sess_del_id" type="text" placeholder="sess_1"></div>
           <button class="btn" id="send_sess_delete" type="button">Send DELETE</button>
         </div>
       </div>
@@ -287,9 +273,7 @@
               <option value="data_dump">data_dump</option>
             </select>
           </div>
-          <div style="flex:1">
-            <label>Date (YYYY-MM-DD if daily)</label><input id="rep_date" type="text" placeholder="">
-          </div>
+          <div style="flex:1"><label>Date (YYYY-MM-DD if daily)</label><input id="rep_date" type="text" placeholder=""></div>
           <div style="flex:1">
             <label>Format</label>
             <select id="rep_fmt">
@@ -364,9 +348,7 @@
     </div>
 
     <div class="row" style="margin-top:10px">
-      <div style="flex:2">
-        <label>q</label><input id="srch_q" type="text" placeholder="battery">
-      </div>
+      <div style="flex:2"><label>q</label><input id="srch_q" type="text" placeholder="battery"></div>
       <div>
         <label>type</label>
         <select id="srch_type">
@@ -374,15 +356,9 @@
           <option>conference</option><option>company</option><option>session</option>
         </select>
       </div>
-      <div>
-        <label>conference_id</label><input id="srch_conf" type="text" placeholder="">
-      </div>
-      <div>
-        <label>limit</label><input id="srch_limit" type="number" placeholder="50">
-      </div>
-      <div>
-        <label>cursor</label><input id="srch_cursor" type="text" placeholder="">
-      </div>
+      <div><label>conference_id</label><input id="srch_conf" type="text" placeholder=""></div>
+      <div><label>limit</label><input id="srch_limit" type="number" placeholder="50"></div>
+      <div><label>cursor</label><input id="srch_cursor" type="text" placeholder=""></div>
       <button class="btn primary" id="send_search_get" type="button">Send GET</button>
     </div>
   </section>
@@ -403,71 +379,73 @@
 
 <script>
 (function(){
-  // ---- Helpers & Settings ----
   const $ = s => document.querySelector(s);
   const LS_SETTINGS = 'cb.settings';
   const LS_PATHS = 'cb.test.paths';
   const API_VERSION = '1.0';
 
   const DEFAULT_PATHS = {
-    conference: '/conference',
-    company: '/company',
-    session: '/session',
-    report: '/report',
-    assistant: '/assistant',
-    search: '/search'
+    conference:'/conference', company:'/company', session:'/session',
+    report:'/report', assistant:'/assistant', search:'/search'
   };
 
-  function getCfg(){
-    try { return JSON.parse(localStorage.getItem(LS_SETTINGS)) || {}; }
-    catch { return {}; }
-  }
-  function getSavedPaths(){
-    try { return JSON.parse(localStorage.getItem(LS_PATHS)) || {}; }
-    catch { return {}; }
-  }
-  function savePath(key, path){
-    const p = getSavedPaths(); p[key] = path; localStorage.setItem(LS_PATHS, JSON.stringify(p));
-  }
-  function resolvePath(key){
-    const cfg = getCfg();
-    const mapping = (cfg.mapping || {});
-    const saved = getSavedPaths()[key];
-    return saved || mapping[key] || DEFAULT_PATHS[key];
-  }
+  const state = { simplePost:false, withCreds:false };
+
+  function getCfg(){ try{ return JSON.parse(localStorage.getItem(LS_SETTINGS))||{} }catch{ return {} } }
+  function getSavedPaths(){ try{ return JSON.parse(localStorage.getItem(LS_PATHS))||{} }catch{ return {} } }
+  function savePath(key, path){ const p=getSavedPaths(); p[key]=path; localStorage.setItem(LS_PATHS, JSON.stringify(p)); }
+  function resolvePath(key){ const cfg=getCfg(); const saved=getSavedPaths()[key]; return saved || (cfg.mapping||{})[key] || DEFAULT_PATHS[key]; }
   function baseUrl(){ return (getCfg().baseUrl || '').replace(/\/+$/,''); }
   function resolvedUrl(key){ return baseUrl() + resolvePath(key); }
+  function uuid(){ return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0,v=c==='x'?r:(r&0x3|0x8);return v.toString(16);}); }
 
-  function uuid(){
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{
-      const r = Math.random()*16|0, v = c==='x'?r:(r&0x3|0x8); return v.toString(16);
-    });
-  }
-
-  // encode file as base64
   function fileToBase64(file){
     return new Promise((resolve,reject)=>{
-      const reader = new FileReader();
+      const reader=new FileReader();
       reader.onload=()=>resolve(btoa(String.fromCharCode(...new Uint8Array(reader.result))));
       reader.onerror=reject;
       reader.readAsArrayBuffer(file);
     });
   }
 
-  // ---- Debug logging (FULL packets) ----
+  // === Environment diagnostics ===
+  function updateEnv(){
+    const origin = location.origin;
+    const bu = baseUrl();
+    const authH = (getCfg().authHeader && getCfg().authValue) ? `${getCfg().authHeader}: (set)` : '(none)';
+    const httpsPage = origin.startsWith('https://');
+    const httpsApi = bu.startsWith('https://');
+
+    let msgs = [];
+    let cls = 'env';
+    if (!bu) { msgs.push('Set base URL in Settings (⚙︎ on Home).'); cls += ' bad'; }
+    else {
+      msgs.push(`Origin: ${origin}`);
+      msgs.push(`Base URL: ${bu}`);
+      msgs.push(`Auth header: ${authH}`);
+      if (httpsPage && !httpsApi) { msgs.push('❗ Mixed content: This page is HTTPS but Base URL is HTTP — browser will block POST. Use HTTPS on the API or test locally.'); cls += ' bad'; }
+      else { cls += ' ok'; }
+      if (getCfg().authHeader && getCfg().authValue) {
+        msgs.push('Note: Custom auth header triggers a CORS preflight (OPTIONS). Ensure your API sends Access-Control-Allow-Origin and -Headers.');
+      }
+      msgs.push(`Simple POST: ${state.simplePost ? 'ON (text/plain, no custom headers)' : 'OFF (application/json with headers)'}`);
+      msgs.push(`Credentials: ${state.withCreds ? 'INCLUDE' : 'OMIT'}`);
+    }
+    const box = $('#envBox'); box.className = cls;
+    $('#envMsg').textContent = msgs.join(' • ');
+  }
+
+  // === Debug ===
   function toCurl({url, method, headers, body}){
     const h = Object.entries(headers||{}).map(([k,v])=>`-H ${JSON.stringify(k+': '+v)}`).join(' ');
     const d = (method && method.toUpperCase()!=='GET' && body!==undefined) ? `--data ${JSON.stringify(JSON.stringify(body))}` : '';
     return `curl -X ${method||'GET'} ${h} ${d} ${JSON.stringify(url)}`;
   }
-
   function appendLog(block){
-    const pre = $('#debugLog');
-    const ts = new Date().toISOString();
+    const pre = $('#debugLog'); const ts = new Date().toISOString();
     pre.textContent = `[${ts}]\n${block}\n\n` + pre.textContent;
     $('#debugDrawer').classList.add('open');
   }
-
   function formatPacket({request, response, durationMs, rawTextLength}){
     const reqStr = JSON.stringify(request, null, 2);
     const resStr = JSON.stringify(response, null, 2);
@@ -477,30 +455,52 @@
 
   async function sendJson(url, method, bodyObj, extraHeaders={}){
     const cfg = getCfg();
-    const headers = { 'Accept': 'application/json', 'Content-Type': 'application/json', ...extraHeaders };
-    if (cfg.authHeader && cfg.authValue) headers[cfg.authHeader] = cfg.authValue;
+    let headers = {};
+    let body = undefined;
 
-    const requestPacket = { url, method, headers, body: (method==='GET' ? undefined : bodyObj) };
+    if (state.simplePost && method !== 'GET') {
+      // Simple request to avoid preflight: text/plain and no custom headers
+      headers['Content-Type'] = 'text/plain';
+      body = JSON.stringify(bodyObj);
+    } else {
+      headers = { 'Accept': 'application/json', 'Content-Type': 'application/json', ...extraHeaders };
+      if (cfg.authHeader && cfg.authValue) headers[cfg.authHeader] = cfg.authValue;
+      body = (method==='GET') ? undefined : JSON.stringify(bodyObj);
+    }
+
+    const fetchOpts = {
+      method,
+      headers,
+      body: (method==='GET') ? undefined : body,
+      mode: 'cors',
+      redirect: 'follow',
+      referrerPolicy: 'no-referrer-when-downgrade',
+      credentials: state.withCreds ? 'include' : 'omit',
+    };
+
+    const requestPacket = { url, method, headers, body: (method==='GET'?undefined:bodyObj), opts: { credentials: fetchOpts.credentials } };
     const t0 = performance.now();
-    let res, text;
     try{
-      res = await fetch(url, { method, headers, body: method==='GET' ? undefined : JSON.stringify(bodyObj) });
-      text = await res.text();
+      const res = await fetch(url, fetchOpts);
+      const text = await res.text();
+      const durationMs = Math.round(performance.now() - t0);
+      let parsed=null; try{ parsed = JSON.parse(text); }catch{}
+
+      const responsePacket = {
+        status: res.status, ok: res.ok,
+        headers: Object.fromEntries(res.headers.entries()),
+        body_json: parsed,
+        body_raw: text
+      };
+      appendLog(formatPacket({request: requestPacket, response: responsePacket, durationMs, rawTextLength: text.length}));
+      return responsePacket;
     }catch(err){
-      appendLog(formatPacket({request: requestPacket, response: { error: err.message }, durationMs: Math.round(performance.now()-t0), rawTextLength: 0}));
+      const durationMs = Math.round(performance.now() - t0);
+      const responsePacket = { network_error: err.message, hint:
+        'If this is a TypeError from fetch, it is usually CORS, mixed content (HTTPS→HTTP), DNS, or the server blocking OPTIONS preflight.' };
+      appendLog(formatPacket({request: requestPacket, response: responsePacket, durationMs, rawTextLength: 0}));
       throw err;
     }
-    const durationMs = Math.round(performance.now() - t0);
-
-    let parsed=null; try{ parsed = JSON.parse(text); }catch{}
-    const responsePacket = {
-      status: res.status, ok: res.ok,
-      headers: Object.fromEntries(res.headers.entries()),
-      body_json: parsed,
-      body_raw: text
-    };
-    appendLog(formatPacket({request: requestPacket, response: responsePacket, durationMs, rawTextLength: text.length}));
-    return responsePacket;
   }
 
   function setUrlRow(key){
@@ -515,10 +515,15 @@
     if (ovEl) ovEl.value = resolvePath(key);
   }
 
-  // ---- UI bindings AFTER DOM is ready ----
+  // === Bindings ===
   document.addEventListener('DOMContentLoaded', ()=>{
+    // Env toggles
+    $('#chk_simple_post').addEventListener('change', e=>{ state.simplePost = e.target.checked; updateEnv(); });
+    $('#chk_with_creds').addEventListener('change', e=>{ state.withCreds = e.target.checked; updateEnv(); });
 
-    // Debug drawer controls
+    updateEnv();
+
+    // Debug drawer
     $('#toggleDebug')?.addEventListener('click', ()=> $('#debugDrawer').classList.toggle('open'));
     $('#closeDrawer')?.addEventListener('click', ()=> $('#debugDrawer').classList.remove('open'));
     $('#clearLog')?.addEventListener('click', ()=> $('#debugLog').textContent='');
@@ -529,22 +534,18 @@
 
     // Save overrides
     ['conference','company','session','report','assistant','search'].forEach(k=>{
-      const btn = document.getElementById(`save_${k}`);
-      btn?.addEventListener('click', ()=>{
-        const p = (document.getElementById(`ov_${k}`)?.value || '').trim() || DEFAULT_PATHS[k];
+      document.getElementById(`save_${k}`).addEventListener('click', ()=>{
+        const p = (document.getElementById(`ov_${k}`).value || '').trim() || DEFAULT_PATHS[k];
         savePath(k,p); setUrlRow(k); appendLog(`Saved override for ${k}: ${p}`);
       });
     });
 
-    // ---- CONFERENCE ----
-    document.getElementById('send_conf_post')?.addEventListener('click', async ()=>{
+    // --- Conference: POST ---
+    document.getElementById('send_conf_post').addEventListener('click', async ()=>{
       const assets = [];
       const pushAsset = async (file, kind) => {
         if (!file) return;
-        assets.push({
-          kind, filename: file.name, mime_type: file.type || 'application/octet-stream',
-          base64: await fileToBase64(file)
-        });
+        assets.push({ kind, filename:file.name, mime_type:file.type||'application/octet-stream', base64: await fileToBase64(file) });
       };
       await pushAsset(document.getElementById('conf_map').files[0], 'booth_map_image');
       await pushAsset(document.getElementById('conf_pdf').files[0], 'exhibitors_pdf');
@@ -571,81 +572,66 @@
       await sendJson(resolvedUrl('conference'), 'POST', body);
     });
 
-    document.getElementById('send_conf_put')?.addEventListener('click', async ()=>{
+    // Conference: PUT/GET/DELETE
+    document.getElementById('send_conf_put').addEventListener('click', async ()=>{
       let fields={}; try{ fields = JSON.parse(document.getElementById('confu_fields').value || '{}'); }catch{}
       const body = { api_version: API_VERSION, request_id: uuid(), conference: { id: document.getElementById('confu_id').value.trim(), ...fields } };
       await sendJson(resolvedUrl('conference'), 'PUT', body);
     });
-
-    document.getElementById('send_conf_get')?.addEventListener('click', async ()=>{
+    document.getElementById('send_conf_get').addEventListener('click', async ()=>{
       const q = document.getElementById('confg_query').value.trim();
-      const url = resolvedUrl('conference') + (q?('?'+q):'');
-      await sendJson(url, 'GET', null);
+      await sendJson(resolvedUrl('conference') + (q?('?'+q):''), 'GET', null);
     });
-
-    document.getElementById('send_conf_delete')?.addEventListener('click', async ()=>{
+    document.getElementById('send_conf_delete').addEventListener('click', async ()=>{
       const body = { api_version: API_VERSION, request_id: uuid(), conference: { id: document.getElementById('confd_id').value.trim() } };
       await sendJson(resolvedUrl('conference'), 'DELETE', body);
     });
 
-    // ---- COMPANY ----
-    document.getElementById('send_comp_post')?.addEventListener('click', async ()=>{
+    // --- Company
+    document.getElementById('send_comp_post').addEventListener('click', async ()=>{
       let companies=[]; try{ companies = JSON.parse(document.getElementById('comp_post_json').value||'[]'); }catch{}
       let options={}; try{ options = JSON.parse(document.getElementById('comp_post_opts').value||'{}'); }catch{}
       const body = { api_version: API_VERSION, request_id: uuid(), companies, options };
       await sendJson(resolvedUrl('company'), 'POST', body);
     });
-
-    document.getElementById('send_comp_put')?.addEventListener('click', async ()=>{
+    document.getElementById('send_comp_put').addEventListener('click', async ()=>{
       let body={}; try{ body = JSON.parse(document.getElementById('comp_put_json').value||'{}'); }catch{}
       if (!body.api_version) body.api_version = API_VERSION;
       if (!body.request_id) body.request_id = uuid();
       await sendJson(resolvedUrl('company'), 'PUT', body);
     });
-
-    document.getElementById('send_comp_get')?.addEventListener('click', async ()=>{
+    document.getElementById('send_comp_get').addEventListener('click', async ()=>{
       const q = document.getElementById('comp_get_q').value.trim();
-      const url = resolvedUrl('company') + (q?('?'+q):'');
-      await sendJson(url, 'GET', null);
+      await sendJson(resolvedUrl('company') + (q?('?'+q):''), 'GET', null);
     });
-
-    document.getElementById('send_comp_delete')?.addEventListener('click', async ()=>{
+    document.getElementById('send_comp_delete').addEventListener('click', async ()=>{
       let del = {}; try{ del = JSON.parse(document.getElementById('comp_del_json').value||'{}'); }catch{}
       const body = { api_version: API_VERSION, request_id: uuid(), ...del };
       await sendJson(resolvedUrl('company'), 'DELETE', body);
     });
 
-    // ---- SESSION ----
+    // --- Session
     function showSessionFiles(){
       const wrap = document.getElementById('sess_files'); wrap.innerHTML='';
       const auds = Array.from(document.getElementById('sess_audio').files||[]);
       const imgs = Array.from(document.getElementById('sess_imgs').files||[]);
-      const addChip = f => {
-        const span = document.createElement('span');
-        span.className='filechip'; span.textContent = `${f.name} (${f.type||'?'})`;
-        wrap.appendChild(span); wrap.appendChild(document.createTextNode(' '));
-      };
+      const addChip = f => { const s=document.createElement('span'); s.className='filechip'; s.textContent=`${f.name} (${f.type||'?'})`; wrap.appendChild(s); wrap.appendChild(document.createTextNode(' ')); };
       auds.forEach(addChip); imgs.forEach(addChip);
     }
-    document.getElementById('sess_audio')?.addEventListener('change', showSessionFiles);
-    document.getElementById('sess_imgs')?.addEventListener('change', showSessionFiles);
+    document.getElementById('sess_audio').addEventListener('change', showSessionFiles);
+    document.getElementById('sess_imgs').addEventListener('change', showSessionFiles);
 
-    document.getElementById('send_sess_post')?.addEventListener('click', async ()=>{
+    document.getElementById('send_sess_post').addEventListener('click', async ()=>{
       const audio = [];
-      for (const f of (document.getElementById('sess_audio').files||[])) {
-        audio.push({ filename:f.name, mime_type:f.type||'audio/*', base64: await fileToBase64(f) });
-      }
+      for (const f of (document.getElementById('sess_audio').files||[])) { audio.push({ filename:f.name, mime_type:f.type||'audio/*', base64: await fileToBase64(f) }); }
       const images = [];
-      for (const f of (document.getElementById('sess_imgs').files||[])) {
-        images.push({ filename:f.name, mime_type:f.type||'image/*', base64: await fileToBase64(f) });
-      }
+      for (const f of (document.getElementById('sess_imgs').files||[])) { images.push({ filename:f.name, mime_type:f.type||'image/*', base64: await fileToBase64(f) }); }
       const latVal = document.getElementById('sess_lat').value;
       const lngVal = document.getElementById('sess_lng').value;
       const gps = (latVal!=='' && lngVal!=='') ? { lat: parseFloat(latVal), lng: parseFloat(lngVal) } : undefined;
 
       const body = {
-        api_version: API_VERSION,
-        request_id: uuid(),
+        api_version: API_VERSION, request_id: uuid(),
         session: {
           id: document.getElementById('sess_id').value.trim(),
           conference_id: document.getElementById('sess_conf').value.trim(),
@@ -663,25 +649,22 @@
       await sendJson(resolvedUrl('session'), 'POST', body);
     });
 
-    document.getElementById('send_sess_put')?.addEventListener('click', async ()=>{
+    document.getElementById('send_sess_put').addEventListener('click', async ()=>{
       let fields={}; try{ fields = JSON.parse(document.getElementById('sessu_fields').value||'{}'); }catch{}
       const body = { api_version: API_VERSION, request_id: uuid(), session: { id: document.getElementById('sessu_id').value.trim(), ...fields } };
       await sendJson(resolvedUrl('session'), 'PUT', body);
     });
-
-    document.getElementById('send_sess_get')?.addEventListener('click', async ()=>{
+    document.getElementById('send_sess_get').addEventListener('click', async ()=>{
       const q = document.getElementById('sess_get_q').value.trim();
-      const url = resolvedUrl('session') + (q?('?'+q):'');
-      await sendJson(url, 'GET', null);
+      await sendJson(resolvedUrl('session') + (q?('?'+q):''), 'GET', null);
     });
-
-    document.getElementById('send_sess_delete')?.addEventListener('click', async ()=>{
+    document.getElementById('send_sess_delete').addEventListener('click', async ()=>{
       const body = { api_version: API_VERSION, request_id: uuid(), session: { id: document.getElementById('sess_del_id').value.trim() } };
       await sendJson(resolvedUrl('session'), 'DELETE', body);
     });
 
-    // ---- REPORT ----
-    document.getElementById('send_rep_post')?.addEventListener('click', async ()=>{
+    // --- Report
+    document.getElementById('send_rep_post').addEventListener('click', async ()=>{
       let options={}; try{ options = JSON.parse(document.getElementById('rep_opts').value||'{}'); }catch{}
       const body = {
         api_version: API_VERSION, request_id: uuid(),
@@ -696,32 +679,29 @@
       };
       await sendJson(resolvedUrl('report'), 'POST', body);
     });
-
-    document.getElementById('send_rep_get')?.addEventListener('click', async ()=>{
+    document.getElementById('send_rep_get').addEventListener('click', async ()=>{
       const params = new URLSearchParams();
       const job = document.getElementById('rep_job').value.trim(); const id = document.getElementById('rep_fetch_id').value.trim(); const fmt = document.getElementById('rep_fetch_fmt').value.trim();
       if (job) params.set('job_id', job);
       if (id) params.set('id', id);
       if (fmt) params.set('format', fmt);
-      const url = resolvedUrl('report') + (params.toString()?('?'+params.toString()):'');
-      await sendJson(url, 'GET', null);
+      await sendJson(resolvedUrl('report') + (params.toString()?('?'+params.toString()):''), 'GET', null);
     });
 
-    // ---- ASSISTANT ----
-    document.getElementById('send_asst_post')?.addEventListener('click', async ()=>{
+    // --- Assistant
+    document.getElementById('send_asst_post').addEventListener('click', async ()=>{
       let inputs={}; try{ inputs = JSON.parse(document.getElementById('asst_inputs').value||'{}'); }catch{}
       const body = { api_version: API_VERSION, request_id: uuid(), task: { id: document.getElementById('asst_id').value.trim(), kind: document.getElementById('asst_kind').value, inputs } };
       await sendJson(resolvedUrl('assistant'), 'POST', body);
     });
-
-    document.getElementById('send_asst_get')?.addEventListener('click', async ()=>{
+    document.getElementById('send_asst_get').addEventListener('click', async ()=>{
       const job = document.getElementById('asst_job').value.trim();
-      const url = resolvedUrl('assistant') + (job?('?job_id='+encodeURIComponent(job)):'');
-      await sendJson(url, 'GET', null);
+      await sendJson(resolvedUrl('assistant') + (job?('?job_id='+encodeURIComponent(job)):''),
+        'GET', null);
     });
 
-    // ---- SEARCH ----
-    document.getElementById('send_search_get')?.addEventListener('click', async ()=>{
+    // --- Search
+    document.getElementById('send_search_get').addEventListener('click', async ()=>{
       const params = new URLSearchParams();
       const v = id => document.getElementById(id).value.trim();
       if (v('srch_q')) params.set('q', v('srch_q'));
@@ -729,11 +709,10 @@
       if (v('srch_conf')) params.set('conference_id', v('srch_conf'));
       if (v('srch_limit')) params.set('limit', v('srch_limit'));
       if (v('srch_cursor')) params.set('cursor', v('srch_cursor'));
-      const url = resolvedUrl('search') + (params.toString()?('?'+params.toString()):'');
-      await sendJson(url, 'GET', null);
+      await sendJson(resolvedUrl('search') + (params.toString()?('?'+params.toString()):''), 'GET', null);
     });
 
-  }); // DOMContentLoaded
+  });
 })();
 </script>
 </body>
