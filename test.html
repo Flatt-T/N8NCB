@@ -31,14 +31,14 @@
   .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
   label{display:block;margin:.6rem 0 .25rem;color:#c8d5f3;font-weight:600}
   input[type="text"],input[type="url"],input[type="number"],textarea,select{width:100%;padding:.6rem .7rem;border-radius:12px;border:1px solid var(--border);background:#0d1426;color:var(--text);outline:none}
-  textarea{min-height:110px;font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace}
+  textarea{min-height:110px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
   .muted{color:var(--muted)}
   .pill{display:inline-block;background:#233255;color:#b8c6e3;border:1px solid var(--border);padding:.15rem .5rem;border-radius:999px;font-size:.75rem}
   .endpointRow{display:grid;grid-template-columns: 1fr auto auto;gap:8px;align-items:end}
-  .drawer{position:fixed;left:0;right:0;bottom:0;max-height:45vh;background:#0a0f1b;border-top:1px solid var(--border);display:none}
+  .drawer{position:fixed;left:0;right:0;bottom:0;max-height:55vh;background:#0a0f1b;border-top:1px solid var(--border);display:none}
   .drawer.open{display:block}
   .drawer .hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border)}
-  .drawer pre{margin:0;padding:12px;max-height:36vh;overflow:auto;white-space:pre-wrap;word-wrap:break-word}
+  .drawer pre{margin:0;padding:12px;max-height:46vh;overflow:auto;white-space:pre-wrap;word-wrap:break-word}
   .filechip{display:inline-flex;align-items:center;gap:6px;border:1px dashed #32406a;border-radius:10px;padding:.15rem .45rem;font-size:.85rem}
 </style>
 </head>
@@ -49,13 +49,13 @@
     <span class="pill">Strict Endpoints</span>
     <div class="spacer"></div>
     <a class="btn" href="index.html">← Home</a>
-    <button class="btn ghost" id="toggleDebug">🐞 Debug</button>
+    <button class="btn ghost" id="toggleDebug" type="button">🐞 Debug</button>
   </div>
 </header>
 
 <main class="container">
   <h1>API Test Panels</h1>
-  <p class="muted">Base URL & endpoint mapping are read from <b>Settings</b> (⚙︎ on Home). You can override and save a custom path per panel.</p>
+  <p class="muted">Base URL & endpoint mapping are read from <b>Settings</b> (⚙︎ on Home). Override and save per panel if needed.</p>
 
   <!-- CONFERENCE -->
   <section class="card">
@@ -70,7 +70,7 @@
         <label>Override path</label>
         <input type="text" id="ov_conference" placeholder="/conference">
       </div>
-      <button class="btn" id="save_conference">Save Path</button>
+      <button class="btn" id="save_conference" type="button">Save Path</button>
     </div>
 
     <div class="grid" style="margin-top:10px">
@@ -105,7 +105,7 @@
           <label class="row" style="gap:6px;"><input id="conf_route" type="checkbox"> Optimize route</label>
         </div>
         <div class="row" style="margin-top:10px">
-          <button class="btn primary" id="send_conf_post">Send POST</button>
+          <button class="btn primary" id="send_conf_post" type="button">Send POST</button>
         </div>
       </div>
 
@@ -114,7 +114,7 @@
         <label>Conference ID (target)</label><input id="confu_id" type="text" placeholder="conf_2025_demo">
         <label>Fields to update (JSON)</label>
         <textarea id="confu_fields" placeholder='{"goals_text":"Updated goals","options":{"optimize_route":true}}'></textarea>
-        <div class="row" style="margin-top:10px"><button class="btn primary" id="send_conf_put">Send PUT</button></div>
+        <div class="row" style="margin-top:10px"><button class="btn primary" id="send_conf_put" type="button">Send PUT</button></div>
 
         <h3 style="margin-top:22px">GET / DELETE</h3>
         <div class="row">
@@ -122,14 +122,14 @@
             <label>GET query params</label>
             <input id="confg_query" type="text" placeholder="id=conf_2025_demo">
           </div>
-          <button class="btn" id="send_conf_get">Send GET</button>
+          <button class="btn" id="send_conf_get" type="button">Send GET</button>
         </div>
         <div class="row" style="margin-top:10px">
           <div style="flex:1">
             <label>DELETE body</label>
             <input id="confd_id" type="text" placeholder='conf_2025_demo'>
           </div>
-          <button class="btn" id="send_conf_delete">Send DELETE</button>
+          <button class="btn" id="send_conf_delete" type="button">Send DELETE</button>
         </div>
       </div>
     </div>
@@ -148,7 +148,7 @@
         <label>Override path</label>
         <input type="text" id="ov_company" placeholder="/company">
       </div>
-      <button class="btn" id="save_company">Save Path</button>
+      <button class="btn" id="save_company" type="button">Save Path</button>
     </div>
 
     <div class="grid" style="margin-top:10px">
@@ -158,12 +158,12 @@
         <textarea id="comp_post_json" placeholder='[{"id":"acme","name":"Acme Corp","website":"https://acme.com","conference_ids":["conf_2025_demo"],"tags":["battery"]}]'></textarea>
         <label>Options</label>
         <input id="comp_post_opts" type="text" placeholder='{"enqueue_enrichment":true}'>
-        <div class="row" style="margin-top:10px"><button class="btn primary" id="send_comp_post">Send POST</button></div>
+        <div class="row" style="margin-top:10px"><button class="btn primary" id="send_comp_post" type="button">Send POST</button></div>
       </div>
       <div class="col-6">
         <h3>PUT Update (JSON)</h3>
         <textarea id="comp_put_json" placeholder='{"api_version":"1.0","request_id":"uuid","companies":[{"id":"acme","tags":["battery","grid"]}]}'></textarea>
-        <div class="row" style="margin-top:10px"><button class="btn primary" id="send_comp_put">Send PUT</button></div>
+        <div class="row" style="margin-top:10px"><button class="btn primary" id="send_comp_put" type="button">Send PUT</button></div>
 
         <h3 style="margin-top:22px">GET / DELETE</h3>
         <div class="row">
@@ -171,14 +171,14 @@
             <label>GET query</label>
             <input id="comp_get_q" type="text" placeholder="conference_id=conf_2025_demo&limit=20">
           </div>
-          <button class="btn" id="send_comp_get">Send GET</button>
+          <button class="btn" id="send_comp_get" type="button">Send GET</button>
         </div>
         <div class="row" style="margin-top:10px">
           <div style="flex:1">
             <label>DELETE body (IDs)</label>
             <textarea id="comp_del_json" placeholder='{"ids":["acme","globex"]}'></textarea>
           </div>
-          <button class="btn" id="send_comp_delete">Send DELETE</button>
+          <button class="btn" id="send_comp_delete" type="button">Send DELETE</button>
         </div>
       </div>
     </div>
@@ -197,7 +197,7 @@
         <label>Override path</label>
         <input type="text" id="ov_session" placeholder="/session">
       </div>
-      <button class="btn" id="save_session">Save Path</button>
+      <button class="btn" id="save_session" type="button">Save Path</button>
     </div>
 
     <div class="grid" style="margin-top:10px">
@@ -230,7 +230,7 @@
           </div>
         </div>
         <div id="sess_files" class="muted" style="margin-top:6px"></div>
-        <div class="row" style="margin-top:10px"><button class="btn primary" id="send_sess_post">Send POST</button></div>
+        <div class="row" style="margin-top:10px"><button class="btn primary" id="send_sess_post" type="button">Send POST</button></div>
       </div>
 
       <div class="col-6">
@@ -238,20 +238,20 @@
         <label>Session ID</label><input id="sessu_id" type="text" placeholder="sess_1">
         <label>Fields to update (JSON)</label>
         <textarea id="sessu_fields" placeholder='{"notes_text":"Added note","media":{"images":[{"filename":"card.jpg","mime_type":"image/jpeg","base64":"...","purpose":"business_card"}]}}'></textarea>
-        <div class="row" style="margin-top:10px"><button class="btn primary" id="send_sess_put">Send PUT</button></div>
+        <div class="row" style="margin-top:10px"><button class="btn primary" id="send_sess_put" type="button">Send PUT</button></div>
 
         <h3 style="margin-top:22px">GET / DELETE</h3>
         <div class="row">
           <div style="flex:1">
             <label>GET query</label><input id="sess_get_q" type="text" placeholder="conference_id=conf_2025_demo&limit=20">
           </div>
-          <button class="btn" id="send_sess_get">Send GET</button>
+          <button class="btn" id="send_sess_get" type="button">Send GET</button>
         </div>
         <div class="row" style="margin-top:10px">
           <div style="flex:1">
             <label>DELETE body</label><input id="sess_del_id" type="text" placeholder="sess_1">
           </div>
-          <button class="btn" id="send_sess_delete">Send DELETE</button>
+          <button class="btn" id="send_sess_delete" type="button">Send DELETE</button>
         </div>
       </div>
     </div>
@@ -270,7 +270,7 @@
         <label>Override path</label>
         <input type="text" id="ov_report" placeholder="/report">
       </div>
-      <button class="btn" id="save_report">Save Path</button>
+      <button class="btn" id="save_report" type="button">Save Path</button>
     </div>
 
     <div class="grid" style="margin-top:10px">
@@ -298,7 +298,7 @@
           </div>
         </div>
         <label>Options (JSON)</label><input id="rep_opts" type="text" placeholder='{"include_transcripts":false}'>
-        <div class="row" style="margin-top:10px"><button class="btn primary" id="send_rep_post">Send POST</button></div>
+        <div class="row" style="margin-top:10px"><button class="btn primary" id="send_rep_post" type="button">Send POST</button></div>
       </div>
       <div class="col-6">
         <h3>GET Status / Fetch</h3>
@@ -306,7 +306,7 @@
           <div style="flex:1"><label>job_id</label><input id="rep_job" type="text" placeholder=""></div>
           <div style="flex:1"><label>id</label><input id="rep_fetch_id" type="text" placeholder=""></div>
           <div style="flex:1"><label>format</label><input id="rep_fetch_fmt" type="text" placeholder="pdf"></div>
-          <button class="btn" id="send_rep_get">Send GET</button>
+          <button class="btn" id="send_rep_get" type="button">Send GET</button>
         </div>
       </div>
     </div>
@@ -325,7 +325,7 @@
         <label>Override path</label>
         <input type="text" id="ov_assistant" placeholder="/assistant">
       </div>
-      <button class="btn" id="save_assistant">Save Path</button>
+      <button class="btn" id="save_assistant" type="button">Save Path</button>
     </div>
 
     <div class="grid" style="margin-top:10px">
@@ -337,12 +337,12 @@
           <option>outreach_draft</option><option>qna</option><option>enrichment</option><option>route_tuning</option><option>custom</option>
         </select>
         <label>Inputs (JSON)</label><textarea id="asst_inputs" placeholder='{"prompt":"Summarise Acme sessions"}'></textarea>
-        <div class="row" style="margin-top:10px"><button class="btn primary" id="send_asst_post">Send POST</button></div>
+        <div class="row" style="margin-top:10px"><button class="btn primary" id="send_asst_post" type="button">Send POST</button></div>
       </div>
       <div class="col-6">
         <h3>GET Poll</h3>
         <label>job_id</label><input id="asst_job" type="text" placeholder="">
-        <div class="row" style="margin-top:10px"><button class="btn" id="send_asst_get">Send GET</button></div>
+        <div class="row" style="margin-top:10px"><button class="btn" id="send_asst_get" type="button">Send GET</button></div>
       </div>
     </div>
   </section>
@@ -360,7 +360,7 @@
         <label>Override path</label>
         <input type="text" id="ov_search" placeholder="/search">
       </div>
-      <button class="btn" id="save_search">Save Path</button>
+      <button class="btn" id="save_search" type="button">Save Path</button>
     </div>
 
     <div class="row" style="margin-top:10px">
@@ -383,7 +383,7 @@
       <div>
         <label>cursor</label><input id="srch_cursor" type="text" placeholder="">
       </div>
-      <button class="btn primary" id="send_search_get">Send GET</button>
+      <button class="btn primary" id="send_search_get" type="button">Send GET</button>
     </div>
   </section>
 </main>
@@ -393,327 +393,348 @@
   <div class="hdr">
     <div>🐞 Debug — Full request/response</div>
     <div class="row">
-      <button class="btn" id="copyLog">Copy</button>
-      <button class="btn ghost" id="clearLog">Clear</button>
-      <button class="btn" id="closeDrawer">Close</button>
+      <button class="btn" id="copyLog" type="button">Copy</button>
+      <button class="btn ghost" id="clearLog" type="button">Clear</button>
+      <button class="btn" id="closeDrawer" type="button">Close</button>
     </div>
   </div>
   <pre id="debugLog"></pre>
 </div>
 
 <script>
-// ---- Helpers & Settings ----
-const $ = s => document.querySelector(s);
-const LS_SETTINGS = 'cb.settings';
-const LS_PATHS = 'cb.test.paths';
-const API_VERSION = '1.0';
+(function(){
+  // ---- Helpers & Settings ----
+  const $ = s => document.querySelector(s);
+  const LS_SETTINGS = 'cb.settings';
+  const LS_PATHS = 'cb.test.paths';
+  const API_VERSION = '1.0';
 
-const DEFAULT_PATHS = {
-  conference: '/conference',
-  company: '/company',
-  session: '/session',
-  report: '/report',
-  assistant: '/assistant',
-  search: '/search'
-};
+  const DEFAULT_PATHS = {
+    conference: '/conference',
+    company: '/company',
+    session: '/session',
+    report: '/report',
+    assistant: '/assistant',
+    search: '/search'
+  };
 
-const DEFAULT_MAPPING_FALLBACK = {
-  conference: '/conference',
-  company: '/company',
-  session: '/session',
-  report: '/report',
-  assistant: '/assistant',
-  search: '/search'
-};
+  function getCfg(){
+    try { return JSON.parse(localStorage.getItem(LS_SETTINGS)) || {}; }
+    catch { return {}; }
+  }
+  function getSavedPaths(){
+    try { return JSON.parse(localStorage.getItem(LS_PATHS)) || {}; }
+    catch { return {}; }
+  }
+  function savePath(key, path){
+    const p = getSavedPaths(); p[key] = path; localStorage.setItem(LS_PATHS, JSON.stringify(p));
+  }
+  function resolvePath(key){
+    const cfg = getCfg();
+    const mapping = (cfg.mapping || {});
+    const saved = getSavedPaths()[key];
+    return saved || mapping[key] || DEFAULT_PATHS[key];
+  }
+  function baseUrl(){ return (getCfg().baseUrl || '').replace(/\/+$/,''); }
+  function resolvedUrl(key){ return baseUrl() + resolvePath(key); }
 
-function getCfg(){
-  try { return JSON.parse(localStorage.getItem(LS_SETTINGS)) || {}; }
-  catch { return {}; }
-}
-function getSavedPaths(){
-  try { return JSON.parse(localStorage.getItem(LS_PATHS)) || {}; }
-  catch { return {}; }
-}
-function savePath(key, path){
-  const p = getSavedPaths(); p[key] = path; localStorage.setItem(LS_PATHS, JSON.stringify(p));
-}
-function resolvePath(key){
-  const cfg = getCfg();
-  const mapping = (cfg.mapping || DEFAULT_MAPPING_FALLBACK);
-  const saved = getSavedPaths()[key];
-  return saved || mapping[key] || DEFAULT_PATHS[key];
-}
-function baseUrl(){ return (getCfg().baseUrl || '').replace(/\/+$/,''); }
-function resolvedUrl(key){ return baseUrl() + resolvePath(key); }
-
-function uuid(){
-  // simple uuid v4-ish
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{
-    const r = Math.random()*16|0, v = c==='x' ? r : (r&0x3|0x8); return v.toString(16);
-  });
-}
-
-// encode file as base64
-function fileToBase64(file){
-  return new Promise((resolve,reject)=>{
-    const reader = new FileReader();
-    reader.onload=()=>resolve(btoa(String.fromCharCode(...new Uint8Array(reader.result))));
-    reader.onerror=reject;
-    reader.readAsArrayBuffer(file);
-  });
-}
-
-function debugLogAppend(obj){
-  const pre = $('#debugLog');
-  const ts = new Date().toISOString();
-  pre.textContent = `[${ts}] ${typeof obj==='string'?obj:JSON.stringify(obj,null,2)}\n\n` + pre.textContent;
-}
-function setUrlRow(key){
-  $(`#url_${key}`).value = resolvedUrl(key);
-  const cfg = getCfg();
-  const fromMap = (cfg.mapping && cfg.mapping[key]) ? cfg.mapping[key] : DEFAULT_PATHS[key];
-  $(`#origin_${key}`).textContent = `baseUrl: ${baseUrl()||'(not set)'} · mapping: ${fromMap}`;
-  $(`#ov_${key}`).value = resolvePath(key);
-}
-
-// open/close debug drawer
-$('#toggleDebug').addEventListener('click', ()=> $('#debugDrawer').classList.toggle('open'));
-$('#closeDrawer').addEventListener('click', ()=> $('#debugDrawer').classList.remove('open'));
-$('#clearLog').addEventListener('click', ()=> $('#debugLog').textContent='');
-$('#copyLog').addEventListener('click', async ()=>{
-  try { await navigator.clipboard.writeText($('#debugLog').textContent); } catch {}
-});
-
-// ---- Boot UI with resolved URLs ----
-document.addEventListener('DOMContentLoaded', ()=>{
-  ['conference','company','session','report','assistant','search'].forEach(setUrlRow);
-});
-
-// ---- Save overrides ----
-['conference','company','session','report','assistant','search'].forEach(k=>{
-  $(`#save_${k}`).addEventListener('click', ()=>{
-    const p = $(`#ov_${k}`).value.trim() || DEFAULT_PATHS[k];
-    savePath(k,p); setUrlRow(k); debugLogAppend(`Saved override for ${k}: ${p}`);
-  });
-});
-
-// ---- Fetch helper obeying settings (GET query vs body) ----
-async function sendJson(url, method, bodyObj, extraHeaders={}){
-  const cfg = getCfg();
-  const headers = { 'Accept': 'application/json', 'Content-Type': 'application/json', ...extraHeaders };
-  if (cfg.authHeader && cfg.authValue) headers[cfg.authHeader] = cfg.authValue;
-
-  const requestPacket = { url, method, headers, body: (method==='GET' ? undefined : bodyObj) };
-  debugLogAppend({request: requestPacket});
-
-  const res = await fetch(url, { method, headers, body: method==='GET' ? undefined : JSON.stringify(bodyObj) });
-  const text = await res.text();
-  let parsed=null; try{ parsed = JSON.parse(text); }catch{}
-  const responsePacket = { status: res.status, ok: res.ok, headers: Object.fromEntries(res.headers.entries()), body: parsed||text };
-  debugLogAppend({response: responsePacket});
-  $('#debugDrawer').classList.add('open');
-  return responsePacket;
-}
-
-// ---- CONFERENCE handlers (spec: /conference) ----
-// POST
-$('#send_conf_post').addEventListener('click', async ()=>{
-  const assets = [];
-  const pushAsset = async (file, kind) => {
-    if (!file) return;
-    assets.push({
-      kind, filename: file.name, mime_type: file.type || 'application/octet-stream',
-      base64: await fileToBase64(file)
+  function uuid(){
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{
+      const r = Math.random()*16|0, v = c==='x'?r:(r&0x3|0x8); return v.toString(16);
     });
-  };
-  await pushAsset($('#conf_map').files[0], 'booth_map_image');
-  await pushAsset($('#conf_pdf').files[0], 'exhibitors_pdf');
-  await pushAsset($('#conf_audio').files[0], 'goals_voice_note_audio');
+  }
 
-  const body = {
-    api_version: API_VERSION,
-    request_id: uuid(),
-    conference: {
-      id: $('#conf_id').value.trim(),
-      name: $('#conf_name').value.trim(),
-      website_url: $('#conf_site').value.trim() || undefined,
-      start_date: $('#conf_start').value.trim(),
-      end_date: $('#conf_end').value.trim(),
-      location: $('#conf_loc').value.trim() || undefined,
-      goals_text: $('#conf_goals').value.trim() || undefined,
-      assets: assets.length ? assets : undefined,
-      options: {
-        import_exhibitors: $('#conf_import').checked || undefined,
-        optimize_route: $('#conf_route').checked || undefined
+  // encode file as base64
+  function fileToBase64(file){
+    return new Promise((resolve,reject)=>{
+      const reader = new FileReader();
+      reader.onload=()=>resolve(btoa(String.fromCharCode(...new Uint8Array(reader.result))));
+      reader.onerror=reject;
+      reader.readAsArrayBuffer(file);
+    });
+  }
+
+  // ---- Debug logging (FULL packets) ----
+  function toCurl({url, method, headers, body}){
+    const h = Object.entries(headers||{}).map(([k,v])=>`-H ${JSON.stringify(k+': '+v)}`).join(' ');
+    const d = (method && method.toUpperCase()!=='GET' && body!==undefined) ? `--data ${JSON.stringify(JSON.stringify(body))}` : '';
+    return `curl -X ${method||'GET'} ${h} ${d} ${JSON.stringify(url)}`;
+  }
+
+  function appendLog(block){
+    const pre = $('#debugLog');
+    const ts = new Date().toISOString();
+    pre.textContent = `[${ts}]\n${block}\n\n` + pre.textContent;
+    $('#debugDrawer').classList.add('open');
+  }
+
+  function formatPacket({request, response, durationMs, rawTextLength}){
+    const reqStr = JSON.stringify(request, null, 2);
+    const resStr = JSON.stringify(response, null, 2);
+    const curl = toCurl(request);
+    return `▶ REQUEST\n${reqStr}\n\n$ cURL\n${curl}\n\n◀ RESPONSE (${durationMs} ms, ${rawTextLength} bytes)\n${resStr}`;
+  }
+
+  async function sendJson(url, method, bodyObj, extraHeaders={}){
+    const cfg = getCfg();
+    const headers = { 'Accept': 'application/json', 'Content-Type': 'application/json', ...extraHeaders };
+    if (cfg.authHeader && cfg.authValue) headers[cfg.authHeader] = cfg.authValue;
+
+    const requestPacket = { url, method, headers, body: (method==='GET' ? undefined : bodyObj) };
+    const t0 = performance.now();
+    let res, text;
+    try{
+      res = await fetch(url, { method, headers, body: method==='GET' ? undefined : JSON.stringify(bodyObj) });
+      text = await res.text();
+    }catch(err){
+      appendLog(formatPacket({request: requestPacket, response: { error: err.message }, durationMs: Math.round(performance.now()-t0), rawTextLength: 0}));
+      throw err;
+    }
+    const durationMs = Math.round(performance.now() - t0);
+
+    let parsed=null; try{ parsed = JSON.parse(text); }catch{}
+    const responsePacket = {
+      status: res.status, ok: res.ok,
+      headers: Object.fromEntries(res.headers.entries()),
+      body_json: parsed,
+      body_raw: text
+    };
+    appendLog(formatPacket({request: requestPacket, response: responsePacket, durationMs, rawTextLength: text.length}));
+    return responsePacket;
+  }
+
+  function setUrlRow(key){
+    const base = baseUrl() || '(not set)';
+    const mapping = (getCfg().mapping || {});
+    const fromMap = mapping[key] || DEFAULT_PATHS[key];
+    const urlEl = document.getElementById(`url_${key}`);
+    const originEl = document.getElementById(`origin_${key}`);
+    const ovEl = document.getElementById(`ov_${key}`);
+    if (urlEl) urlEl.value = resolvedUrl(key);
+    if (originEl) originEl.textContent = `baseUrl: ${base} · mapping: ${fromMap}`;
+    if (ovEl) ovEl.value = resolvePath(key);
+  }
+
+  // ---- UI bindings AFTER DOM is ready ----
+  document.addEventListener('DOMContentLoaded', ()=>{
+
+    // Debug drawer controls
+    $('#toggleDebug')?.addEventListener('click', ()=> $('#debugDrawer').classList.toggle('open'));
+    $('#closeDrawer')?.addEventListener('click', ()=> $('#debugDrawer').classList.remove('open'));
+    $('#clearLog')?.addEventListener('click', ()=> $('#debugLog').textContent='');
+    $('#copyLog')?.addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText($('#debugLog').textContent); }catch{} });
+
+    // Initialize URL rows
+    ['conference','company','session','report','assistant','search'].forEach(setUrlRow);
+
+    // Save overrides
+    ['conference','company','session','report','assistant','search'].forEach(k=>{
+      const btn = document.getElementById(`save_${k}`);
+      btn?.addEventListener('click', ()=>{
+        const p = (document.getElementById(`ov_${k}`)?.value || '').trim() || DEFAULT_PATHS[k];
+        savePath(k,p); setUrlRow(k); appendLog(`Saved override for ${k}: ${p}`);
+      });
+    });
+
+    // ---- CONFERENCE ----
+    document.getElementById('send_conf_post')?.addEventListener('click', async ()=>{
+      const assets = [];
+      const pushAsset = async (file, kind) => {
+        if (!file) return;
+        assets.push({
+          kind, filename: file.name, mime_type: file.type || 'application/octet-stream',
+          base64: await fileToBase64(file)
+        });
+      };
+      await pushAsset(document.getElementById('conf_map').files[0], 'booth_map_image');
+      await pushAsset(document.getElementById('conf_pdf').files[0], 'exhibitors_pdf');
+      await pushAsset(document.getElementById('conf_audio').files[0], 'goals_voice_note_audio');
+
+      const body = {
+        api_version: API_VERSION,
+        request_id: uuid(),
+        conference: {
+          id: document.getElementById('conf_id').value.trim(),
+          name: document.getElementById('conf_name').value.trim(),
+          website_url: document.getElementById('conf_site').value.trim() || undefined,
+          start_date: document.getElementById('conf_start').value.trim(),
+          end_date: document.getElementById('conf_end').value.trim(),
+          location: document.getElementById('conf_loc').value.trim() || undefined,
+          goals_text: document.getElementById('conf_goals').value.trim() || undefined,
+          assets: assets.length ? assets : undefined,
+          options: {
+            import_exhibitors: document.getElementById('conf_import').checked || undefined,
+            optimize_route: document.getElementById('conf_route').checked || undefined
+          }
+        }
+      };
+      await sendJson(resolvedUrl('conference'), 'POST', body);
+    });
+
+    document.getElementById('send_conf_put')?.addEventListener('click', async ()=>{
+      let fields={}; try{ fields = JSON.parse(document.getElementById('confu_fields').value || '{}'); }catch{}
+      const body = { api_version: API_VERSION, request_id: uuid(), conference: { id: document.getElementById('confu_id').value.trim(), ...fields } };
+      await sendJson(resolvedUrl('conference'), 'PUT', body);
+    });
+
+    document.getElementById('send_conf_get')?.addEventListener('click', async ()=>{
+      const q = document.getElementById('confg_query').value.trim();
+      const url = resolvedUrl('conference') + (q?('?'+q):'');
+      await sendJson(url, 'GET', null);
+    });
+
+    document.getElementById('send_conf_delete')?.addEventListener('click', async ()=>{
+      const body = { api_version: API_VERSION, request_id: uuid(), conference: { id: document.getElementById('confd_id').value.trim() } };
+      await sendJson(resolvedUrl('conference'), 'DELETE', body);
+    });
+
+    // ---- COMPANY ----
+    document.getElementById('send_comp_post')?.addEventListener('click', async ()=>{
+      let companies=[]; try{ companies = JSON.parse(document.getElementById('comp_post_json').value||'[]'); }catch{}
+      let options={}; try{ options = JSON.parse(document.getElementById('comp_post_opts').value||'{}'); }catch{}
+      const body = { api_version: API_VERSION, request_id: uuid(), companies, options };
+      await sendJson(resolvedUrl('company'), 'POST', body);
+    });
+
+    document.getElementById('send_comp_put')?.addEventListener('click', async ()=>{
+      let body={}; try{ body = JSON.parse(document.getElementById('comp_put_json').value||'{}'); }catch{}
+      if (!body.api_version) body.api_version = API_VERSION;
+      if (!body.request_id) body.request_id = uuid();
+      await sendJson(resolvedUrl('company'), 'PUT', body);
+    });
+
+    document.getElementById('send_comp_get')?.addEventListener('click', async ()=>{
+      const q = document.getElementById('comp_get_q').value.trim();
+      const url = resolvedUrl('company') + (q?('?'+q):'');
+      await sendJson(url, 'GET', null);
+    });
+
+    document.getElementById('send_comp_delete')?.addEventListener('click', async ()=>{
+      let del = {}; try{ del = JSON.parse(document.getElementById('comp_del_json').value||'{}'); }catch{}
+      const body = { api_version: API_VERSION, request_id: uuid(), ...del };
+      await sendJson(resolvedUrl('company'), 'DELETE', body);
+    });
+
+    // ---- SESSION ----
+    function showSessionFiles(){
+      const wrap = document.getElementById('sess_files'); wrap.innerHTML='';
+      const auds = Array.from(document.getElementById('sess_audio').files||[]);
+      const imgs = Array.from(document.getElementById('sess_imgs').files||[]);
+      const addChip = f => {
+        const span = document.createElement('span');
+        span.className='filechip'; span.textContent = `${f.name} (${f.type||'?'})`;
+        wrap.appendChild(span); wrap.appendChild(document.createTextNode(' '));
+      };
+      auds.forEach(addChip); imgs.forEach(addChip);
+    }
+    document.getElementById('sess_audio')?.addEventListener('change', showSessionFiles);
+    document.getElementById('sess_imgs')?.addEventListener('change', showSessionFiles);
+
+    document.getElementById('send_sess_post')?.addEventListener('click', async ()=>{
+      const audio = [];
+      for (const f of (document.getElementById('sess_audio').files||[])) {
+        audio.push({ filename:f.name, mime_type:f.type||'audio/*', base64: await fileToBase64(f) });
       }
-    }
-  };
-  await sendJson(resolvedUrl('conference'), 'POST', body);
-});
+      const images = [];
+      for (const f of (document.getElementById('sess_imgs').files||[])) {
+        images.push({ filename:f.name, mime_type:f.type||'image/*', base64: await fileToBase64(f) });
+      }
+      const latVal = document.getElementById('sess_lat').value;
+      const lngVal = document.getElementById('sess_lng').value;
+      const gps = (latVal!=='' && lngVal!=='') ? { lat: parseFloat(latVal), lng: parseFloat(lngVal) } : undefined;
 
-// PUT
-$('#send_conf_put').addEventListener('click', async ()=>{
-  let fields={}; try{ fields = JSON.parse($('#confu_fields').value || '{}'); }catch{}
-  const body = { api_version: API_VERSION, request_id: uuid(), conference: { id: $('#confu_id').value.trim(), ...fields } };
-  await sendJson(resolvedUrl('conference'), 'PUT', body);
-});
-// GET
-$('#send_conf_get').addEventListener('click', async ()=>{
-  const q = $('#confg_query').value.trim();
-  const url = resolvedUrl('conference') + (q?('?'+q):'');
-  await sendJson(url, 'GET', null);
-});
-// DELETE
-$('#send_conf_delete').addEventListener('click', async ()=>{
-  const body = { api_version: API_VERSION, request_id: uuid(), conference: { id: $('#confd_id').value.trim() } };
-  await sendJson(resolvedUrl('conference'), 'DELETE', body);
-});
+      const body = {
+        api_version: API_VERSION,
+        request_id: uuid(),
+        session: {
+          id: document.getElementById('sess_id').value.trim(),
+          conference_id: document.getElementById('sess_conf').value.trim(),
+          company_id: document.getElementById('sess_comp').value.trim() || undefined,
+          started_at: document.getElementById('sess_start').value.trim(),
+          ended_at: document.getElementById('sess_end').value.trim() || undefined,
+          gps,
+          media: (audio.length||images.length) ? { audio: audio.length?audio:undefined, images: images.length?images:undefined } : undefined,
+          ocr_text: document.getElementById('sess_ocr').value.trim() || undefined,
+          notes_text: document.getElementById('sess_notes').value.trim() || undefined,
+          transcript_text: document.getElementById('sess_trans').value.trim() || undefined,
+          preferences: { cloud_enrichment: document.getElementById('sess_enrich').checked, follow_up: document.getElementById('sess_follow').checked }
+        }
+      };
+      await sendJson(resolvedUrl('session'), 'POST', body);
+    });
 
-// ---- COMPANY handlers (/company) ----
-// POST
-$('#send_comp_post').addEventListener('click', async ()=>{
-  let companies=[]; try{ companies = JSON.parse($('#comp_post_json').value||'[]'); }catch{}
-  let options={}; try{ options = JSON.parse($('#comp_post_opts').value||'{}'); }catch{}
-  const body = { api_version: API_VERSION, request_id: uuid(), companies, options };
-  await sendJson(resolvedUrl('company'), 'POST', body);
-});
-// PUT
-$('#send_comp_put').addEventListener('click', async ()=>{
-  let body={}; try{ body = JSON.parse($('#comp_put_json').value||'{}'); }catch{}
-  if (!body.api_version) body.api_version = API_VERSION;
-  if (!body.request_id) body.request_id = uuid();
-  await sendJson(resolvedUrl('company'), 'PUT', body);
-});
-// GET
-$('#send_comp_get').addEventListener('click', async ()=>{
-  const q = $('#comp_get_q').value.trim();
-  const url = resolvedUrl('company') + (q?('?'+q):'');
-  await sendJson(url, 'GET', null);
-});
-// DELETE
-$('#send_comp_delete').addEventListener('click', async ()=>{
-  let del = {}; try{ del = JSON.parse($('#comp_del_json').value||'{}'); }catch{}
-  const body = { api_version: API_VERSION, request_id: uuid(), ...del };
-  await sendJson(resolvedUrl('company'), 'DELETE', body);
-});
+    document.getElementById('send_sess_put')?.addEventListener('click', async ()=>{
+      let fields={}; try{ fields = JSON.parse(document.getElementById('sessu_fields').value||'{}'); }catch{}
+      const body = { api_version: API_VERSION, request_id: uuid(), session: { id: document.getElementById('sessu_id').value.trim(), ...fields } };
+      await sendJson(resolvedUrl('session'), 'PUT', body);
+    });
 
-// ---- SESSION handlers (/session) ----
-// show file chips
-function showSessionFiles(){
-  const wrap = $('#sess_files'); wrap.innerHTML='';
-  const auds = Array.from($('#sess_audio').files||[]);
-  const imgs = Array.from($('#sess_imgs').files||[]);
-  const addChip = f => {
-    const span = document.createElement('span');
-    span.className='filechip'; span.textContent = `${f.name} (${f.type||'?'})`;
-    wrap.appendChild(span); wrap.appendChild(document.createTextNode(' '));
-  };
-  auds.forEach(addChip); imgs.forEach(addChip);
-}
-$('#sess_audio').addEventListener('change', showSessionFiles);
-$('#sess_imgs').addEventListener('change', showSessionFiles);
+    document.getElementById('send_sess_get')?.addEventListener('click', async ()=>{
+      const q = document.getElementById('sess_get_q').value.trim();
+      const url = resolvedUrl('session') + (q?('?'+q):'');
+      await sendJson(url, 'GET', null);
+    });
 
-// POST
-$('#send_sess_post').addEventListener('click', async ()=>{
-  const audio = [];
-  for (const f of ($('#sess_audio').files||[])) {
-    audio.push({ filename:f.name, mime_type:f.type||'audio/*', base64: await fileToBase64(f) });
-  }
-  const images = [];
-  for (const f of ($('#sess_imgs').files||[])) {
-    images.push({ filename:f.name, mime_type:f.type||'image/*', base64: await fileToBase64(f) });
-  }
-  const gps = ($('#sess_lat').value && $('#sess_lng').value) ? { lat: parseFloat($('#sess_lat').value), lng: parseFloat($('#sess_lng').value) } : undefined;
+    document.getElementById('send_sess_delete')?.addEventListener('click', async ()=>{
+      const body = { api_version: API_VERSION, request_id: uuid(), session: { id: document.getElementById('sess_del_id').value.trim() } };
+      await sendJson(resolvedUrl('session'), 'DELETE', body);
+    });
 
-  const body = {
-    api_version: API_VERSION,
-    request_id: uuid(),
-    session: {
-      id: $('#sess_id').value.trim(),
-      conference_id: $('#sess_conf').value.trim(),
-      company_id: $('#sess_comp').value.trim() || undefined,
-      started_at: $('#sess_start').value.trim(),
-      ended_at: $('#sess_end').value.trim() || undefined,
-      gps,
-      media: (audio.length||images.length) ? { audio: audio.length?audio:undefined, images: images.length?images:undefined } : undefined,
-      ocr_text: $('#sess_ocr').value.trim() || undefined,
-      notes_text: $('#sess_notes').value.trim() || undefined,
-      transcript_text: $('#sess_trans').value.trim() || undefined,
-      preferences: { cloud_enrichment: $('#sess_enrich').checked, follow_up: $('#sess_follow').checked }
-    }
-  };
-  await sendJson(resolvedUrl('session'), 'POST', body);
-});
+    // ---- REPORT ----
+    document.getElementById('send_rep_post')?.addEventListener('click', async ()=>{
+      let options={}; try{ options = JSON.parse(document.getElementById('rep_opts').value||'{}'); }catch{}
+      const body = {
+        api_version: API_VERSION, request_id: uuid(),
+        report: {
+          id: document.getElementById('rep_id').value.trim(),
+          conference_id: document.getElementById('rep_conf').value.trim(),
+          type: document.getElementById('rep_type').value,
+          date: document.getElementById('rep_date').value.trim() || undefined,
+          format: document.getElementById('rep_fmt').value,
+          options
+        }
+      };
+      await sendJson(resolvedUrl('report'), 'POST', body);
+    });
 
-// PUT
-$('#send_sess_put').addEventListener('click', async ()=>{
-  let fields={}; try{ fields = JSON.parse($('#sessu_fields').value||'{}'); }catch{}
-  const body = { api_version: API_VERSION, request_id: uuid(), session: { id: $('#sessu_id').value.trim(), ...fields } };
-  await sendJson(resolvedUrl('session'), 'PUT', body);
-});
+    document.getElementById('send_rep_get')?.addEventListener('click', async ()=>{
+      const params = new URLSearchParams();
+      const job = document.getElementById('rep_job').value.trim(); const id = document.getElementById('rep_fetch_id').value.trim(); const fmt = document.getElementById('rep_fetch_fmt').value.trim();
+      if (job) params.set('job_id', job);
+      if (id) params.set('id', id);
+      if (fmt) params.set('format', fmt);
+      const url = resolvedUrl('report') + (params.toString()?('?'+params.toString()):'');
+      await sendJson(url, 'GET', null);
+    });
 
-// GET
-$('#send_sess_get').addEventListener('click', async ()=>{
-  const q = $('#sess_get_q').value.trim();
-  const url = resolvedUrl('session') + (q?('?'+q):'');
-  await sendJson(url, 'GET', null);
-});
+    // ---- ASSISTANT ----
+    document.getElementById('send_asst_post')?.addEventListener('click', async ()=>{
+      let inputs={}; try{ inputs = JSON.parse(document.getElementById('asst_inputs').value||'{}'); }catch{}
+      const body = { api_version: API_VERSION, request_id: uuid(), task: { id: document.getElementById('asst_id').value.trim(), kind: document.getElementById('asst_kind').value, inputs } };
+      await sendJson(resolvedUrl('assistant'), 'POST', body);
+    });
 
-// DELETE
-$('#send_sess_delete').addEventListener('click', async ()=>{
-  const body = { api_version: API_VERSION, request_id: uuid(), session: { id: $('#sess_del_id').value.trim() } };
-  await sendJson(resolvedUrl('session'), 'DELETE', body);
-});
+    document.getElementById('send_asst_get')?.addEventListener('click', async ()=>{
+      const job = document.getElementById('asst_job').value.trim();
+      const url = resolvedUrl('assistant') + (job?('?job_id='+encodeURIComponent(job)):'');
+      await sendJson(url, 'GET', null);
+    });
 
-// ---- REPORT handlers (/report) ----
-$('#send_rep_post').addEventListener('click', async ()=>{
-  let options={}; try{ options = JSON.parse($('#rep_opts').value||'{}'); }catch{}
-  const body = {
-    api_version: API_VERSION, request_id: uuid(),
-    report: {
-      id: $('#rep_id').value.trim(),
-      conference_id: $('#rep_conf').value.trim(),
-      type: $('#rep_type').value,
-      date: $('#rep_date').value.trim() || undefined,
-      format: $('#rep_fmt').value,
-      options
-    }
-  };
-  await sendJson(resolvedUrl('report'), 'POST', body);
-});
-$('#send_rep_get').addEventListener('click', async ()=>{
-  const params = new URLSearchParams();
-  const job = $('#rep_job').value.trim(); const id = $('#rep_fetch_id').value.trim(); const fmt = $('#rep_fetch_fmt').value.trim();
-  if (job) params.set('job_id', job);
-  if (id) params.set('id', id);
-  if (fmt) params.set('format', fmt);
-  const url = resolvedUrl('report') + (params.toString()?('?'+params.toString()):'');
-  await sendJson(url, 'GET', null);
-});
+    // ---- SEARCH ----
+    document.getElementById('send_search_get')?.addEventListener('click', async ()=>{
+      const params = new URLSearchParams();
+      const v = id => document.getElementById(id).value.trim();
+      if (v('srch_q')) params.set('q', v('srch_q'));
+      if (document.getElementById('srch_type').value) params.set('type', document.getElementById('srch_type').value);
+      if (v('srch_conf')) params.set('conference_id', v('srch_conf'));
+      if (v('srch_limit')) params.set('limit', v('srch_limit'));
+      if (v('srch_cursor')) params.set('cursor', v('srch_cursor'));
+      const url = resolvedUrl('search') + (params.toString()?('?'+params.toString()):'');
+      await sendJson(url, 'GET', null);
+    });
 
-// ---- ASSISTANT handlers (/assistant) ----
-$('#send_asst_post').addEventListener('click', async ()=>{
-  let inputs={}; try{ inputs = JSON.parse($('#asst_inputs').value||'{}'); }catch{}
-  const body = { api_version: API_VERSION, request_id: uuid(), task: { id: $('#asst_id').value.trim(), kind: $('#asst_kind').value, inputs } };
-  await sendJson(resolvedUrl('assistant'), 'POST', body);
-});
-$('#send_asst_get').addEventListener('click', async ()=>{
-  const job = $('#asst_job').value.trim();
-  const url = resolvedUrl('assistant') + (job?('?job_id='+encodeURIComponent(job)):'');
-  await sendJson(url, 'GET', null);
-});
-
-// ---- SEARCH handlers (/search) ----
-$('#send_search_get').addEventListener('click', async ()=>{
-  const params = new URLSearchParams();
-  if ($('#srch_q').value.trim()) params.set('q', $('#srch_q').value.trim());
-  if ($('#srch_type').value) params.set('type', $('#srch_type').value);
-  if ($('#srch_conf').value.trim()) params.set('conference_id', $('#srch_conf').value.trim());
-  if ($('#srch_limit').value) params.set('limit', $('#srch_limit').value);
-  if ($('#srch_cursor').value.trim()) params.set('cursor', $('#srch_cursor').value.trim());
-  const url = resolvedUrl('search') + (params.toString()?('?'+params.toString()):'');
-  await sendJson(url, 'GET', null);
-});
+  }); // DOMContentLoaded
+})();
 </script>
 </body>
 </html>
